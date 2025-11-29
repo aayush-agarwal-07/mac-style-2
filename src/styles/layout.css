@@ -603,4 +603,9 @@
   .folder-card:hover .folder-icon {
     background-color: none !important;
   }
+
+  .back-arrow {
+    font-size: 4vw !important;
+    text-align: center !important;
+  }
 }
