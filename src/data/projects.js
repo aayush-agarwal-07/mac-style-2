@@ -7,7 +7,7 @@ const projects = [
       {
         id: "intro",
         title: "",
-        text: "The First project explores the fundamentals of layout, color flow, and balance. It focuses on establishing a clean design direction and defining a modern aesthetic foundation.",
+        text: "The First project explores the fundamentals of layout, color flow, and balance. It focuses on establishing a clean design direction.",
       },
     ],
     infoPoints: [
