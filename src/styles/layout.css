@@ -531,11 +531,12 @@
 
   .back-link {
     font-size: 3.5vw !important;
+    font-weight: 400 !important;
   }
 
   .left-actions {
-    top: 14.5vw !important;
-    left: 7vw !important;
+    top: 15vw !important;
+    left: 9vw !important;
   }
 
   #root,
