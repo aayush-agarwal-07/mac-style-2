@@ -124,9 +124,9 @@ export default function Project() {
         {/* LEFT */}
         <aside className="project-left" aria-label={`${project.title} visuals`}>
           <div className="left-actions">
-            <button className="back-link" onClick={() => navigate("/projects")}>
+            <Link to="/projects" className="back-link">
               ← Back to projects
-            </button>
+            </Link>
           </div>
           <div
             className="sticky-frame"
@@ -141,8 +141,6 @@ export default function Project() {
               className="left-long-image interactive-image"
             />
           </div>
-
-          
         </aside>
 
         {/* RIGHT */}
@@ -186,8 +184,6 @@ export default function Project() {
               </div>
             )}
           </div>
-
-          
         </section>
         {/* Next nav (uses functions to avoid ref issues) */}
         <nav className="project-nav" aria-label="Project navigation">
