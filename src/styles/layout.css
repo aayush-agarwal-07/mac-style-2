@@ -540,7 +540,7 @@
 
   #root,
   body {
-    overflow: auto !important;
+    overflow-y: hidden !important;
   }
 
   .sticky-frame {
