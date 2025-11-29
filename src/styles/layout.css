@@ -110,14 +110,14 @@
   border: none;
   background: transparent;
   color: #333;
-  padding: 6px 10px;
+  padding: 0 !important;
   cursor: pointer;
   font-weight: 600;
   border-radius: 8px;
 }
-.back-link:hover {
+/* .back-link:hover {
   background: rgba(0, 0, 0, 0.04);
-}
+} */
 
 /* Responsive */
 @media (max-width: 900px) {
@@ -165,11 +165,10 @@
 
 /* optional small action area under the frame */
 .left-actions {
-  margin-top: 8px;
   text-align: left;
   position: absolute;
-  top: 5vw;
-  left: 2vw;
+  top: 4.5vw;
+  left: 3vw;
 }
 .back-link {
   font-size: 0.95rem;
