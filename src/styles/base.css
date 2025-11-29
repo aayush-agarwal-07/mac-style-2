@@ -31,33 +31,42 @@ a {
   min-height: 100vh;
 }
 
-html,
-body,
+/* Base rule */
 #root {
   background: url("/src/assets/placeholders/light_macstyle_bg.svg");
   background-size: contain;
   background-repeat: no-repeat;
   width: 100%;
-  height: 130vh;
+  height: 130vh;              /* default height */
   background-position: center;
   background-position-y: 2vw;
 }
 
-@media screen and (max-aspect-ratio: 16/10) and (min-aspect-ratio: 4/3) {
-  html,
-  body,
-  #root {
-    height: 100vh;
-  }
+/* Give html + body a height so #root can shrink correctly */
+html,
+body {
+  height: auto;
 }
 
+
+/* --- MACBOOK / SQUARE LAPTOPS --- */
 @media screen and (max-aspect-ratio: 16/10) {
   html,
   body,
   #root {
-    height: 100vh;
+    height: 100vh !important;    /* force override for testing */
   }
 }
+
+/* (Optional) even more specific narrower laptop range */
+@media screen and (max-aspect-ratio: 16/10) and (min-aspect-ratio: 4/3) {
+  html,
+  body,
+  #root {
+    height: 100vh !important;
+  }
+}
+
 
 body {
   opacity: 1;
