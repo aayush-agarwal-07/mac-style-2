@@ -559,7 +559,7 @@
 
   .project-right {
     position: fixed !important;
-    top: 67% !important;
+    bottom: -8% !important;
     width: 86% !important;
     padding: 0 !important;
     overflow-y: auto !important;
