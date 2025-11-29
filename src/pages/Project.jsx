@@ -151,20 +151,6 @@ export default function Project() {
             {/* No subtitle variable used */}
           </header>
 
-          {/* Dynamic info panel */}
-          <div className="dynamic-info-panel" role="status" aria-live="polite">
-            {activeInfo ? (
-              <>
-                <div className="info-percent">{activeInfo.percent}%</div>
-                <div className="info-text">{activeInfo.text}</div>
-              </>
-            ) : (
-              <div className="info-empty">
-                Scroll the left image to reveal info
-              </div>
-            )}
-          </div>
-
           <div className="project-sections">
             {project.sections && project.sections.length > 0 ? (
               project.sections.map((s, i) => (
@@ -185,6 +171,22 @@ export default function Project() {
               </article>
             )}
           </div>
+
+          {/* Dynamic info panel */}
+          <div className="dynamic-info-panel" role="status" aria-live="polite">
+            {activeInfo ? (
+              <>
+                {/* <div className="info-percent">{activeInfo.percent}%</div> */}
+                <div className="info-text">{activeInfo.text}</div>
+              </>
+            ) : (
+              <div className="info-empty">
+                Scroll the left image to reveal info
+              </div>
+            )}
+          </div>
+
+          
         </section>
         {/* Next nav (uses functions to avoid ref issues) */}
         <nav className="project-nav" aria-label="Project navigation">
