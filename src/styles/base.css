@@ -39,10 +39,17 @@ body,
   background-size: contain;
   background-repeat: no-repeat;
   width: 100%;
-  height: 130vh;
+  height: 126vh;
   background-position: center;
   background-position-y: 2vw;
 }
+
+@media screen and (max-aspect-ratio: 16/10) and (min-aspect-ratio: 4/3) {
+  .your-element {
+    height: 100vh;
+  }
+}
+
 
 body {
   opacity: 1;
