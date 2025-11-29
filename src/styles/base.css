@@ -15,6 +15,7 @@ html,
 body,
 #root {
   height: 100%;
+
   margin: 0;
   padding: 0;
   background: var(--bg);
@@ -38,6 +39,7 @@ body,
   background-size: contain;
   background-repeat: no-repeat;
   width: 100%;
+  height: 130vh;
   background-position: center;
   background-position-y: 2vw;
 }
@@ -49,7 +51,6 @@ body {
 
 /* Root element */
 #root {
-  height: 100vh; /* if you want full-screen app */
   overflow: hidden; /* or scroll */
   -ms-overflow-style: none; /* IE/Edge old */
   scrollbar-width: none; /* Firefox */
@@ -65,7 +66,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2vw;
-  padding: 4vw 17vw 0;
+  padding: 4vw 7vw 0;
 }
 
 .site-header nav {
@@ -124,6 +125,13 @@ body {
   transform: translateY(-12px) scale(1.02);
 }
 
+.folder-card a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .folder-card:hover .folder-title {
   background-color: #1d6fff;
   color: #fff;
@@ -157,6 +165,8 @@ body {
   color: #2d2d2d;
   font-weight: 400;
   border-radius: 0.1vw;
+  width: fit-content;
+  margin-top: 0.4vw;
 }
 
 /* project grid cards */
