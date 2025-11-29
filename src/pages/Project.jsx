@@ -123,6 +123,11 @@ export default function Project() {
         </nav>
         {/* LEFT */}
         <aside className="project-left" aria-label={`${project.title} visuals`}>
+          <div className="left-actions">
+            <button className="back-link" onClick={() => navigate("/projects")}>
+              ← Back to projects
+            </button>
+          </div>
           <div
             className="sticky-frame"
             ref={stickyRef}
@@ -137,11 +142,7 @@ export default function Project() {
             />
           </div>
 
-          <div className="left-actions">
-            <button className="back-link" onClick={() => navigate("/projects")}>
-              ← Back to projects
-            </button>
-          </div>
+          
         </aside>
 
         {/* RIGHT */}
