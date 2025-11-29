@@ -34,7 +34,7 @@ a {
 html,
 body,
 #root {
-  background: url("/src/assets/placeholders/light_macstyle_bg.svg");
+  background: url("https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/mac-style-bg.svg");
   background-size: contain;
   background-repeat: no-repeat;
   width: 100%;

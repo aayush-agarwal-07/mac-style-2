@@ -5,7 +5,7 @@ import "./../styles/layout.css";
 export default function Header(){
   return (
     <header className="site-header">
-      <div className="brand">Kunal Rastogi,</div>
+      <div className="brand">Kunal Rastogi</div>
       <nav>
         <Link to="/about" className="about">About me</Link>
       </nav>
