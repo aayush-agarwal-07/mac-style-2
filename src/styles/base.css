@@ -44,13 +44,17 @@ body,
 }
 
 @media screen and (max-aspect-ratio: 16/10) and (min-aspect-ratio: 4/3) {
-  .your-element {
+  html,
+  body,
+  #root {
     height: 100vh;
   }
 }
 
 @media screen and (max-aspect-ratio: 16/10) {
-  .your-element {
+  html,
+  body,
+  #root {
     height: 100vh;
   }
 }
