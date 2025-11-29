@@ -559,8 +559,11 @@
 
   .project-right {
     position: fixed !important;
-    top: 62% !important;
+    top: 67% !important;
     width: 86% !important;
+    padding: 0 !important;
+    overflow-y: auto !important;
+    height: 40% !important;
   }
 
   .dynamic-info-panel {
@@ -570,7 +573,9 @@
   .about-me-msite {
     display: block !important;
     width: 100% !important;
-    padding: 14vw 5vw !important;
+    padding: 0 5vw !important;
+    overflow-y: auto !important;
+    height: 40% !important;
   }
 
   .project-heading {

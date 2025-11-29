@@ -53,6 +53,16 @@ export default function Projects() {
                 potential, I am now seeking a challenging role as a Design
                 Manager to contribute to the success of an organization.
               </p>
+              {/* <p className="section-text">
+                Highly skilled and accomplished Senior Visual Designer with a
+                passion for creating exceptional brand experiences. With +6
+                years of experience in the (D2C) industry and a successful
+                freelance career working with diverse brands, I bring a unique
+                blend of creativity, leadership, and expertise to every project.
+                Known for mentoring and guiding teams to achieve their full
+                potential, I am now seeking a challenging role as a Design
+                Manager to contribute to the success of an organization.
+              </p> */}
             </article>
           </div>
         </section>
