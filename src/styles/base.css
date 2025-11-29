@@ -1,0 +1,112 @@
+:root{
+  --bg: #fbf6f0;
+  --card: #fff;
+  --muted: #9b8f85;
+  --accent: #6ab0ff;
+  --radius: 14px;
+  --max-width: 1100px;
+}
+
+
+
+/* Reset-ish */
+*{box-sizing:border-box}
+html,body,#root{height:100%;margin:0;padding:0;background:var(--bg);font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+a{color:inherit}
+.loading{display:flex;align-items:center;justify-content:center;min-height:100vh}
+
+
+
+html, body, #root {
+  background: url("/src/assets/placeholders/light_macstyle_bg.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  background-position: center;
+}
+
+body { opacity: 1; transition: opacity .45s ease; } /* always visible by default */
+
+
+
+
+/* header */
+.site-header{display:flex;justify-content:space-between;align-items:center;padding:18px 26px;border-bottom:1px solid rgba(0,0,0,0.03);background:linear-gradient(180deg, rgba(255,255,255,0.7), transparent)}
+.site-header .brand{font-weight:600;letter-spacing:0.04em}
+.site-header nav a{margin-left:18px;text-decoration:none;color:var(--muted);font-size:.95rem}
+
+/* folder grid like your reference */
+.home .page-title{ text-align:center; margin-top:28px; font-weight:600; color:#3b3b3b}
+.folder-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(190px,1fr));
+  gap:22px;
+  padding:36px;
+  max-width:var(--max-width);
+  margin: 0 auto;
+}
+
+.folder-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:18px;
+  text-decoration:none;
+  color:#2b2b2b;
+  
+  border-radius:12px;
+  
+  transform: translateY(12px) scale(.995);
+  opacity: 0;
+  transition: transform .45s cubic-bezier(.2,.9,.2,1), opacity .45s ease, box-shadow .25s ease;
+  will-change: transform, opacity;
+}
+.folder-card.visible{ transform: translateY(0) scale(1); opacity:1}
+.folder-card:hover{ transform: translateY(-6px) scale(1.01); box-shadow: 0 8px 30px rgba(20,20,20,0.08)}
+.folder-icon {
+  width: 84px;
+  height: 62px;
+  margin-bottom: 12px;
+  /* background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.5)); */
+  display: flex;
+  /* border:1px solid rgba(0,0,0,0.04); */
+  align-items: center;
+  justify-content: center;
+}
+
+.folder-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.folder-title{ font-size:0.95rem;text-align:center;color:var(--muted)}
+
+/* project grid cards */
+.project-grid{display:flex;flex-wrap:wrap;gap:16px;padding:26px;justify-content:center;max-width:var(--max-width);margin:0 auto}
+.project-card{ width: 280px; background:var(--card); border-radius:10px; overflow:hidden; text-decoration:none; color:inherit; padding:12px; transition: transform .28s ease, box-shadow .28s ease; opacity:0; transform: translateY(10px)}
+.project-card:hover{ transform: translateY(-6px); box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+.project-card .thumb{height:160px;background:linear-gradient(180deg,#e8f4ff,#cfeeff); border-radius:6px}
+
+/* long project page */
+.project-page{max-width:900px;margin:36px auto;padding:18px}
+.hero{height:380px;display:flex;align-items:center;justify-content:center;color:white;border-radius:12px;margin-bottom:28px}
+.hero.parallax{ background-image: url('/src/assets/placeholders/placeholder-1.jpg'); background-size:cover; background-position:center; position:relative; overflow:hidden; }
+.hero h1{font-size:2rem;text-shadow: 0 6px 20px rgba(0,0,0,.35)}
+
+/* document sections (scroll reveal) */
+.doc-section{background:rgba(255,255,255,0.6); padding:20px;border-radius:10px;margin:18px 0; opacity:0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.9,.2,1)}
+.doc-section.visible{ opacity:1; transform: none }
+.doc-section img{width:100%;height:auto;border-radius:8px;margin-top:16px}
+
+/* responsive tweaks */
+@media (max-width:900px){
+  .hero{height:300px}
+  .project-card{width:47%}
+}
+@media (max-width:600px){
+  .project-card{width:100%}
+  .folder-grid{padding:18px}
+  .hero{height:220px}
+}

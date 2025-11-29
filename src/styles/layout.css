@@ -1,0 +1,375 @@
+/* Project two-column container */
+.project-container{
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  max-width: 100%;
+  margin: 28px auto;
+  padding: 0 18px;
+  align-items: center;
+}
+
+/* LEFT: sticky frame */
+.project-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 60%;
+}
+
+/* Project page — right column header + sections + nav */
+.project-title {
+  margin-bottom: 28px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(16,16,16,0.04);
+}
+
+.project-heading {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.12;
+  margin: 0;
+  color: #111;
+  letter-spacing: -0.01em;
+}
+
+.project-description {
+  margin-top: 10px;
+  color: #6f6f76;
+  font-size: 1.02rem;
+  max-width: 760px;
+  line-height: 1.6;
+}
+
+/* sections wrapper */
+.project-sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 8px;
+}
+
+/* each doc section */
+.doc-section {
+  background: rgba(255,255,255,0.98);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(12,12,14,0.03);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .56s ease, transform .56s cubic-bezier(.2,.9,.2,1);
+}
+
+.doc-section.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.section-title {
+  margin: 0 0 8px 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.section-text {
+  margin: 0;
+  color: #555;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* project nav */
+.project-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+  align-items: center;
+  width: 15vw;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #2563eb;
+  background: transparent;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background .18s ease, transform .12s ease;
+}
+
+.nav-link:hover {
+  background: rgba(37,99,235,0.06);
+  transform: translateY(-2px);
+}
+
+/* small utilities */
+.back-link {
+  display: inline-block;
+  border: none;
+  background: transparent;
+  color: #333;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 8px;
+}
+.back-link:hover{ background: rgba(0,0,0,0.04) }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .project-heading { font-size: 1.6rem; }
+  .project-description { font-size: 0.98rem; }
+}
+
+@media (max-width: 720px) {
+  .project-container { grid-template-columns: 1fr; }
+  .project-left { order: -1; } /* image above content */
+  .sticky-frame { position: relative; height: auto; overflow: visible; }
+}
+
+
+/* The frame that is sticky and scrolls independently */
+.sticky-frame {
+  position: sticky;
+  top: 88px; /* account for header height */
+  height: calc(100vh - 110px); /* viewport height minus header/padding */
+  overflow-y: auto;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+  padding: 12px;
+}
+
+/* The long image sits inside; allow it to be full width (will be tall) */
+.left-long-image {
+  width: 100%;
+  height: auto; /* keep natural height (likely very tall) */
+  display: block;
+  border-radius: 8px;
+}
+
+/* optional small action area under the frame */
+.left-actions { margin-top: 8px; text-align: left; }
+.back-link { font-size: .95rem; color: #444; text-decoration: none; }
+
+/* RIGHT: document style content */
+.project-right { padding-bottom: 48px; padding-top: 48px; width: 46%; height: 90vh;}
+.project-title { margin-bottom: 18px; }
+.project-title h1{ margin:0; font-size:1.6rem; }
+.muted { color: #7b7280; margin-top:6px; }
+
+/* document sections reveal */
+.doc-section {
+  background: rgba(255,255,255,0.9);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.2,.9,.2,1);
+}
+.doc-section.visible { opacity:1; transform:none; }
+.doc-section img { width: 100%; height: auto; border-radius: 8px; margin-top:12px; }
+
+/* Responsive: collapse to single column on small screens */
+@media (max-width: 980px) {
+  .project-container { grid-template-columns: 320px 1fr; gap:20px; padding:0 12px; }
+  .sticky-frame { top: 70px; height: calc(100vh - 100px); }
+}
+
+@media (max-width: 720px) {
+  .project-container { grid-template-columns: 1fr; }
+  .sticky-frame { position: relative; top: auto; height: auto; overflow: visible; }
+  .left-actions { text-align: left; }
+  .project-left { order: -1; margin-bottom: 14px; } /* optionally show image above content on mobile */
+}
+
+
+/* ------- Dynamic info panel (right column, just under header) ------- */
+.dynamic-info-panel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,250,0.9));
+  box-shadow: 0 6px 18px rgba(12,12,14,0.03);
+  margin-bottom: 18px;
+  height: 6vw;
+}
+.info-percent {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #222;
+  min-width: 56px;
+  text-align: center;
+  background: #f5f8ff;
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+.info-text { color: #444; font-size: 0.98rem; line-height: 1.45; }
+
+/* Tooltip */
+.zoom-tooltip {
+  position: fixed;
+  z-index: 1100;
+  pointer-events: none;
+  background: rgba(20,20,20,0.9);
+  color: white;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+  opacity: 0;
+  animation: tooltipFade 220ms ease-in-out forwards;
+}
+@keyframes tooltipFade { to { opacity: 1; transform: translate(-50%, -115%); } }
+
+/* Zoom overlay */
+.zoom-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,12,0.7);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.zoom-stage {
+  max-width: 95%;
+  max-height: 85%;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(8,8,10,0.6);
+  position: relative;
+  background: #000;
+}
+
+.zoomed-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 350ms cubic-bezier(.2,.9,.2,1);
+  will-change: transform;
+  transform-origin: 50% 50%; /* set inline from React */
+}
+
+.zoom-close {
+  position: fixed;
+  right: 22px;
+  top: 18px;
+  z-index: 1210;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+/* reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .zoomed-image, .doc-section { transition: none !important; animation: none !important; }
+}
+
+/* ---- Hero CTA (state-machine friendly) ---- */
+
+/* Hero Single-Image controlled flow (use with the component above) */
+
+.hero-cta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+}
+
+/* The clickable area */
+.hero-cta-link {
+  display: inline-block;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 320ms cubic-bezier(.2, .9, .2, 1), box-shadow 320ms ease;
+  will-change: transform;
+}
+
+/* subtle lift on hover/focus */
+.hero-cta-link:hover,
+.hero-cta-link:focus {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 18px 40px rgba(18, 22, 30, 0.08);
+}
+
+/* image itself */
+.hero-single-img {
+  display: block;
+  width: min(520px, 52vw);
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-link { transition: none !important; transform: none !important; box-shadow: none !important; }
+}
+
+
+/* Full viewport area, centered content */
+.landing-main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-image: url("/assets/landing/light_macstyle_bg.jpg");
+  background-size: cover;
+  background-position: center;
+
+  width: 88%;
+  margin: 0 auto;
+  transform: scale(0.95);
+}
+
+/* Wrapper */
+.landing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  text-align: center;
+}
+
+/* Clickable area */
+.landing-clickable {
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Image / GIF box – this is the key part for equal sizing */
+.landing-image {
+  display: block;
+  margin: 0 auto;
+
+  /* Force a consistent box for SVG + GIFs */
+  width: 640px;         /* tweak if you want bigger/smaller */
+  height: 400px;        /* keep same ratio across all assets */
+  max-width: 100%;
+
+  object-fit: contain;  /* keep aspect ratio without stretching */
+}
+
+/* Optional small caption if you re-enable it */
+.landing-caption {
+  margin-top: 16px;
+  font-size: 0.875rem;
+  color: #64748b; /* slate-ish */
+}
