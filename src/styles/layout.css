@@ -561,6 +561,7 @@
     position: fixed !important;
     top: 82% !important;
     width: 86% !important;
+    padding: 0 !important;
   }
 
   .dynamic-info-panel {
@@ -584,5 +585,10 @@
     color: #7b7b7b I !important;
     line-height: 1.5 !important;
     font-size: 3.3vw !important;
+  }
+
+  .more {
+    font-size: 3.5vw !important;
+    color: #458ccd !important;
   }
 }
