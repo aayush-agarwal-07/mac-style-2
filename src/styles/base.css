@@ -76,6 +76,8 @@ body::-webkit-scrollbar {
   padding: 4.5vw 4vw 0;
 }
 
+/* .site-header:hover  */
+
 .site-header nav {
   align-self: flex-end;
 }
@@ -84,7 +86,13 @@ body::-webkit-scrollbar {
   font-weight: 400;
   letter-spacing: 0.04em;
   color: #a0978a;
+  width: fit-content;
 }
+
+.site-header .brand:hover {
+  color: #2d2d2d;
+}
+
 .site-header nav a {
   margin-left: 1vw;
   font-weight: 400;
