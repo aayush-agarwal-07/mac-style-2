@@ -15,7 +15,6 @@ html,
 body,
 #root {
   height: 100%;
-
   margin: 0;
   padding: 0;
   background: var(--bg);
@@ -39,7 +38,7 @@ body,
   background-size: contain;
   background-repeat: no-repeat;
   width: 100%;
-  height: 126vh;
+  height: 130vh;
   background-position: center;
   background-position-y: 2vw;
 }
@@ -50,21 +49,22 @@ body,
   }
 }
 
-
 body {
   opacity: 1;
   transition: opacity 0.45s ease;
 } /* always visible by default */
 
 /* Root element */
-#root {
+#root,
+body {
   overflow: hidden; /* or scroll */
   -ms-overflow-style: none; /* IE/Edge old */
   scrollbar-width: none; /* Firefox */
 }
 
 /* Hide scrollbar for Chrome, Safari, Edge */
-#root::-webkit-scrollbar {
+#root::-webkit-scrollbar,
+body::-webkit-scrollbar {
   display: none;
 }
 
