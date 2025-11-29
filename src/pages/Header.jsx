@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <Link to="/" className="brand">
-        Kunal Rastogi,
+        Home
       </Link>
       <nav>
         <Link to="/about" className="about">
