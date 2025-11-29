@@ -125,7 +125,7 @@ export default function Project() {
         <aside className="project-left" aria-label={`${project.title} visuals`}>
           <div className="left-actions">
             <Link to="/projects" className="back-link">
-              ← Back to projects
+              <span className="back-arrow">←</span> Back to projects
             </Link>
           </div>
           <div

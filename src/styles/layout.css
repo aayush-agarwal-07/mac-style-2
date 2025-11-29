@@ -591,4 +591,16 @@
     font-size: 3.5vw !important;
     color: #458ccd !important;
   }
+
+  .folder-card:hover {
+    transform: none !important;
+  }
+
+  .folder-card:hover .folder-title {
+    background-color: none !important;
+    color: #fff !important;
+  }
+  .folder-card:hover .folder-icon {
+    background-color: none !important;
+  }
 }
