@@ -43,7 +43,7 @@ body,
   background-position-y: 2vw;
 }
 
-@media (max-height: 1100px) {
+@media (min-aspect-ratio: 16/5) and (max-height: 1100px) {
   #root {
     height: 100vh !important;
   }
