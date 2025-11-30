@@ -520,8 +520,6 @@
 .about-avatar {
   width: 11vw;
   height: 11vw;
-  min-width: 72px;
-  min-height: 72px;
   border-radius: 1vw;
   object-fit: cover;
   display: block;
@@ -573,6 +571,7 @@
   margin: 0 0 1vw 0;
   font-size: 1.05vw;
   color: #2b2b2b;
+  font-weight: 500;
 }
 .skill-card p {
   margin: 0;
@@ -758,88 +757,59 @@
   }
 }
 
-@media (max-width: 1200px) {
-  .about-name {
-    font-size: 3.8vw;
-  }
-  .about-desc {
-    font-size: 1.4vw;
-  }
-  .about-avatar {
-    width: 11vw;
-    height: 11vw;
-  }
-  .about-decoration {
-    width: 36vw;
-    right: 2.5vw;
-  }
-}
-
-@media (max-width: 900px) {
-  .about-sheet {
-    padding: 4vw 4vw 6vw;
-  }
-  .tab,
-  .tab--right {
-    font-size: 3.6vw;
-    padding: 3vw 4vw;
-    border-radius: 3.2vw;
-  }
+@media (max-width: 769px) {
   .about-sheet__card {
-    padding: 6vw;
-    border-radius: 4vw;
-    min-height: 60vh;
+    padding: 0 10vw !important;
   }
+
   .about-card {
-    flex-direction: column;
-    gap: 4vw;
-    align-items: flex-start;
+    flex-direction: column !important;
   }
-  .about-avatar {
-    width: 20vw;
-    height: 20vw;
-    min-width: auto;
-    min-height: auto;
-    border-radius: 2vw;
-  }
-  .about-name {
-    font-size: 7.2vw;
-    margin-top: 0.4vw;
-  }
-  .about-desc {
-    font-size: 3.6vw;
-    margin-bottom: 3.6vw;
-  }
-  .about-skills {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3.6vw;
-  }
-  .skill-card {
-    padding: 3vw;
-    border-radius: 3vw;
-  }
-  .about-decoration {
-    display: none;
-  }
-}
 
-@media (max-width: 420px) {
+  .about-avatar {
+    width: 28vw !important;
+    height: 28vw !important;
+    border-radius: 4vw !important;
+  }
+
   .about-name {
-    font-size: 8.8vw;
+    font-size: 8vw !important;
   }
+
   .about-desc {
-    font-size: 4.2vw;
+    font-size: 3vw !important;
+    line-height: 1.5 !important;
   }
-  .tab {
-    padding: 3.6vw 5vw;
-    font-size: 4.6vw;
-    border-radius: 4vw;
-  }
+
   .about-sheet__card {
-    padding: 5vw;
+    position: absolute !important;
   }
+
   .about-skills {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 3.6vw;
+    grid-template-columns: repeat(2, 1fr) !important;
+    width: fit-content !important;
+    margin: 0 auto !important;
+    justify-items: center !important;
+    column-gap: 6vw !important;
+    row-gap: 2vw !important;
+  }
+
+  .skill-card {
+    width: 34vw !important;
+    height: 34vw !important;
+    padding: 1vw 2vw !important;
+  }
+
+  .about-skills {
+    margin-top: 36vw !important;
+  }
+
+  .skill-card h4 {
+    font-size: 2.8vw !important;
+    margin: 0 0 2vw 0 !important;
+  }
+
+  .skill-card p {
+    font-size: 2.3vw !important;
   }
 }
