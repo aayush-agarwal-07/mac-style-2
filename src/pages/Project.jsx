@@ -143,13 +143,13 @@ export default function Project() {
   return (
     <>
       <header className="site-header">
-        <Link to="/" className="brand">
-          {isMsite ? "Home" : "Kunal Rastogi"}
+        <Link to="/projects" className="projects">
+          Projects
         </Link>
 
         <nav>
-          <Link to="/projects" className="projects">
-            Projects
+          <Link to="/" className="brand">
+            {isMsite ? "Home" : "Kunal Rastogi"}
           </Link>
         </nav>
       </header>
