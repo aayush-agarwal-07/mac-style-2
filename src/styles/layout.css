@@ -802,6 +802,7 @@
 
   .about-skills {
     margin-top: 36vw !important;
+    overflow-y: auto !important;
   }
 
   .skill-card h4 {
