@@ -43,11 +43,11 @@ export default function AboutMeHeader() {
         {isMsite ? "Home" : "Kunal Rastogi"}
       </Link>
 
-      {/* <nav>
-        <Link to="/about" className="about">
-          About me
+      <nav>
+        <Link to="/projects" className="projects">
+          Projects
         </Link>
-      </nav> */}
+      </nav>
     </header>
   );
 }
