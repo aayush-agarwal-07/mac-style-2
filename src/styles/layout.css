@@ -467,7 +467,7 @@
   }
 
   #root {
-    background: url(https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/mac-style-bg-msite.svg) !important;
+    background: url(https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/mac-style-bg-msite-final.svg) !important;
     background-size: contain !important;
     background-repeat: no-repeat !important;
     width: 100% !important;
@@ -477,7 +477,12 @@
   }
 
   .site-header {
-    padding: 15vw 10vw 0 !important;
+    padding: 15vw 8vw 0 !important;
+  }
+
+  .site-header nav {
+    position: relative !important;
+    top: -3.1vw !important;
   }
 
   .landing-main {
@@ -613,8 +618,6 @@
   .site-header a {
     font-size: 0.85rem !important;
   }
-
- 
 }
 
 @media (max-width: 769px), (pointer: coarse) {
