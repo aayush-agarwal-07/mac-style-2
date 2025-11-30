@@ -503,7 +503,7 @@
   }
 
   .home {
-    height: 51.9% !important;
+    height: 56% !important;
     overflow-y: auto !important;
   }
 
@@ -546,7 +546,7 @@
 
   .sticky-frame {
     position: fixed !important;
-    height: 51% !important;
+    height: 60% !important;
     right: 9% !important;
     width: 82% !important;
     overflow-y: auto !important;
