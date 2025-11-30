@@ -759,11 +759,12 @@
 
 @media (max-width: 769px) {
   .about-sheet__card {
-    padding: 0 10vw !important;
+    padding: 0 !important;
   }
 
   .about-card {
     flex-direction: column !important;
+    padding: 0 10vw !important;
   }
 
   .about-avatar {
@@ -786,12 +787,21 @@
   }
 
   .about-skills {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(4, 1fr) !important;
     width: fit-content !important;
-    margin: 0 auto !important;
+    width: 100vw !important;
+    overflow-x: auto !important;
     justify-items: center !important;
     column-gap: 6vw !important;
     row-gap: 2vw !important;
+  }
+
+  .about-skills > *:first-child {
+    margin-left: 5.5vw;
+  }
+
+  .about-skills::-webkit-scrollbar {
+    display: none !important;
   }
 
   .skill-card {
@@ -802,7 +812,6 @@
 
   .about-skills {
     margin-top: 36vw !important;
-    overflow-y: auto !important;
   }
 
   .skill-card h4 {
