@@ -104,42 +104,40 @@ export default function Project() {
     }, 60);
   }
 
-  const [isMsite, setIsMsite] = useState(() => {
-    if (typeof window === "undefined") return false;
+  // const [isMsite, setIsMsite] = useState(() => {
+  //   if (typeof window === "undefined") return false;
 
-    const narrow = window.matchMedia("(max-width: 769px)").matches;
-    const touch = window.matchMedia("(pointer: coarse)").matches;
+  //   const narrow = window.matchMedia("(max-width: 769px)").matches;
+  //   const touch = window.matchMedia("(pointer: coarse)").matches;
 
-    return narrow || touch;
-  });
+  //   return narrow || touch;
+  // });
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
 
-    const mqNarrow = window.matchMedia("(max-width: 769px)");
-    const mqTouch = window.matchMedia("(pointer: coarse)");
+  //   const mqNarrow = window.matchMedia("(max-width: 769px)");
+  //   const mqTouch = window.matchMedia("(pointer: coarse)");
 
-    const update = () => {
-      setIsMsite(mqNarrow.matches || mqTouch.matches);
-    };
+  //   const update = () => {
+  //     setIsMsite(mqNarrow.matches || mqTouch.matches);
+  //   };
 
-    // add listeners (new API + fallback)
-    mqNarrow.addEventListener?.("change", update);
-    mqTouch.addEventListener?.("change", update);
-    mqNarrow.addListener?.(update);
-    mqTouch.addListener?.(update);
 
-    return () => {
-      mqNarrow.removeEventListener?.("change", update);
-      mqTouch.removeEventListener?.("change", update);
-      mqNarrow.removeListener?.(update);
-      mqTouch.removeListener?.(update);
-    };
-  }, []);
+  //   mqNarrow.addEventListener?.("change", update);
+  //   mqTouch.addEventListener?.("change", update);
+  //   mqNarrow.addListener?.(update);
+  //   mqTouch.addListener?.(update);
 
-  /* -------------------------
-     Render (no Header, per your request)
-     ------------------------- */
+  //   return () => {
+  //     mqNarrow.removeEventListener?.("change", update);
+  //     mqTouch.removeEventListener?.("change", update);
+  //     mqNarrow.removeListener?.(update);
+  //     mqTouch.removeListener?.(update);
+  //   };
+  // }, []);
+
+ 
   return (
     <>
       <header className="site-header">
@@ -149,7 +147,7 @@ export default function Project() {
 
         <nav>
           <Link to="/" className="brand">
-            {isMsite ? "Home" : "Kunal Rastogi"}
+            Home
           </Link>
         </nav>
       </header>
