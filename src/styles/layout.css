@@ -107,7 +107,7 @@
   color: #333;
   padding: 0 !important;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 400;
   border-radius: 8px;
 }
 /* .back-link:hover {
@@ -477,7 +477,7 @@
   }
 
   .site-header {
-    padding: 15vw 9vw 0 !important;
+    padding: 15vw 10vw 0 !important;
   }
 
   .landing-main {
@@ -530,12 +530,12 @@
   }
 
   .back-link {
-    font-size: 3.5vw !important;
+    font-size: 0.85rem !important;
     font-weight: 400 !important;
   }
 
   .left-actions {
-    top: 15vw !important;
+    top: 14vw !important;
     left: 9vw !important;
   }
 
@@ -546,7 +546,7 @@
 
   .sticky-frame {
     position: fixed !important;
-    height: 50vh !important;
+    height: 51% !important;
     right: 9% !important;
     width: 82% !important;
     overflow-y: auto !important;
@@ -560,7 +560,7 @@
 
   .project-right {
     position: fixed !important;
-    top: 82% !important;
+    top: 83% !important;
     width: 86% !important;
     padding: 0 !important;
   }
@@ -608,5 +608,9 @@
   .back-arrow {
     font-size: 4vw !important;
     text-align: center !important;
+  }
+
+  .site-header a {
+    font-size: 0.85rem !important;
   }
 }
