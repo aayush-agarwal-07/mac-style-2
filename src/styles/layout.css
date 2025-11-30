@@ -614,8 +614,13 @@
     font-size: 0.85rem !important;
   }
 
-  .folder-card.visible {
-    transform: none !important;
-    opacity: 1;
+ 
+}
+
+@media (max-width: 769px), (pointer: coarse) {
+  .folder-card {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+    transition: none !important;
   }
 }
