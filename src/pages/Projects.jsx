@@ -20,12 +20,12 @@ export default function Projects() {
   // auto-detect msite by viewport width (adjust breakpoint if you want)
   const [isMsite, setIsMsite] = useState(() => {
     if (typeof window === "undefined") return false; // SSR-safe default
-    return window.matchMedia("(max-width: 900px)").matches;
+    return window.matchMedia("(max-width: 769px)").matches;
   });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(max-width: 900px)");
+    const mq = window.matchMedia("(max-width: 769px)");
     const onChange = (e) => setIsMsite(e.matches);
 
     // modern API preferred, fallback for older browsers
