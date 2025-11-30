@@ -494,8 +494,8 @@
     justify-content: center !important;
     align-items: center !important;
     padding: 4vw 10vw 4vw !important;
-    row-gap: 4vw !important;
-    column-gap: 16vw !important;
+    row-gap: 16px !important;
+    column-gap: 64px !important;
   }
 
   .home::-webkit-scrollbar {
@@ -516,8 +516,8 @@
   }
 
   .folder-icon {
-    width: 26vw !important;
-    height: 20vw !important;
+    width: 100px !important;
+    height: 80px !important;
   }
 
   .project-container {
