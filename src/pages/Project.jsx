@@ -126,7 +126,7 @@ export default function Project() {
           <div className="left-actions">
             <Link to="/projects" className="back-link">
               {/* <span className="back-arrow" aria-hidden="true">←</span> */}
-              Back to projects
+              Projects
             </Link>
           </div>
           <div
