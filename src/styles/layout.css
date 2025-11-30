@@ -769,8 +769,8 @@
   }
 
   .about-avatar {
-    width: 28vw !important;
-    height: 28vw !important;
+    width: 24vw !important;
+    height: 24vw !important;
     border-radius: 4vw !important;
   }
 
@@ -799,7 +799,7 @@
   }
 
   .about-skills > *:first-child {
-    margin-left: 5.5vw;
+    margin-left: 9.5vw;
   }
 
   .about-skills::-webkit-scrollbar {
