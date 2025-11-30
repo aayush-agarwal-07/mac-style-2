@@ -794,7 +794,7 @@
     width: 100vw !important;
     overflow-x: auto !important;
     justify-items: center !important;
-    column-gap: 6vw !important;
+    column-gap: 4vw !important;
     row-gap: 2vw !important;
   }
 
