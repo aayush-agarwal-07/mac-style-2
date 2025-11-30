@@ -613,4 +613,9 @@
   .site-header a {
     font-size: 0.85rem !important;
   }
+
+  .folder-card.visible {
+    transform: none !important;
+    opacity: 1;
+  }
 }
