@@ -765,6 +765,7 @@
   .about-card {
     flex-direction: column !important;
     padding: 0 10vw !important;
+    margin-bottom: 2vw !important;
   }
 
   .about-avatar {
@@ -807,7 +808,7 @@
 
   .skill-card {
     width: 34vw !important;
-    height: 34vw !important;
+    height: 31vw !important;
     padding: 1vw 2vw !important;
   }
 
