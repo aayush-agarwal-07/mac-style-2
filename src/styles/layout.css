@@ -780,6 +780,7 @@
   .about-desc {
     font-size: 3vw !important;
     line-height: 1.5 !important;
+    text-align: justify !important;
   }
 
   .about-sheet__card {
