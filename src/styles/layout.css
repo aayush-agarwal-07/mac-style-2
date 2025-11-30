@@ -589,6 +589,10 @@
   color: #2d2d2d !important;
 }
 
+.about:hover {
+  color: #2d2d2d !important;
+}
+
 @media (max-width: 769px) {
   body {
     background: #fff !important;
