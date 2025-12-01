@@ -610,12 +610,12 @@
 }
 
 .marquee-track {
-  display: flex;
-  flex-wrap: nowrap;
+  display: inline-flex; /* ← FIX */
+  white-space: nowrap; /* ← FIX */
   gap: 6vw;
-  width: fit-content;
   animation: scroll 24s linear infinite;
   will-change: transform;
+  transform: translateZ(0); /* ← smooth GPU */
 }
 
 .brand-card {
@@ -636,7 +636,6 @@
   opacity: 1;
 }
 
-/* animate EXACT width of ONE original set */
 @keyframes scroll {
   from {
     transform: translateX(0);
