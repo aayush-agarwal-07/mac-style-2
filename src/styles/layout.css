@@ -617,7 +617,7 @@
   /* the magic: track takes exact pixel width, no stretching */
   width: fit-content;
 
-  animation: scroll 12s linear infinite;
+  animation: scroll 24s linear infinite;
   will-change: transform;
 }
 
@@ -953,5 +953,11 @@
 
   .marquee-track {
     gap: 8vw;
+  }
+
+  .about-handles {
+    position: fixed;
+    bottom: 0;
+    right: 4vw;
   }
 }
