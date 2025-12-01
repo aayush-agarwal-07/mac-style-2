@@ -558,17 +558,6 @@
   margin-top: 2vw;
 }
 
-.about-brands {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  justify-items: center;
-  gap: 1.8vw;
-  margin-top: 1vw;
-  overflow: hidden;
-  width: 100%;
-  position: relative;
-}
-
 .about-handles {
   margin-top: 1vw;
   margin-bottom: 8vw;
@@ -583,13 +572,6 @@
   height: 14vw !important;
   border-radius: 1.1vw;
   padding: 0.5vw 1vw;
-}
-
-.brand-card {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain;
-  border-radius: 1.1vw;
 }
 
 .skill-card h4 {
@@ -618,22 +600,46 @@
   color: #2d2d2d !important;
 }
 
-.brand-card img {
-  height: 6vw;
-  width: 6vw;
-  object-fit: contain;
-  opacity: 0.9;
-  transition: opacity 0.3s ease;
+/* Marquee wrapper */
+/* Wrapper */
+.about-brands {
+  overflow: hidden;
+  width: 100%;
+  margin-top: 1vw;
+  position: relative;
 }
 
 .marquee-track {
   display: flex;
-  gap: 3rem;
-  animation: scroll 20s linear infinite;
-  width: max-content;
+  flex-wrap: nowrap;
+  gap: 1.8vw;
+
+  /* the magic: track takes exact pixel width, no stretching */
+  width: fit-content;
+
+  animation: scroll 12s linear infinite;
+  will-change: transform;
 }
 
-/* Infinite scroll animation */
+.brand-card {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-card img {
+  height: 6vw;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.brand-card img:hover {
+  opacity: 1;
+}
+
+/* animate EXACT width of ONE original set */
 @keyframes scroll {
   from {
     transform: translateX(0);
@@ -641,10 +647,6 @@
   to {
     transform: translateX(-50%);
   }
-}
-
-.brand-card img:hover {
-  opacity: 1;
 }
 
 .about-handles {
@@ -947,5 +949,9 @@
   .about-handles img {
     width: 10vw;
     height: 10vw;
+  }
+
+  .marquee-track {
+    gap: 8vw;
   }
 }
