@@ -557,6 +557,14 @@
   margin-top: 2vw;
 }
 
+.about-brands {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  justify-items: center;
+  gap: 1.8vw;
+  margin-top: 2vw;
+}
+
 /* single small skill card */
 .skill-card {
   background: url(https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/about_me_page_folder_icon.svg) !important;
@@ -567,6 +575,14 @@
   border-radius: 1.1vw;
   padding: 0.5vw 1vw;
 }
+
+.brand-card {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+  border-radius: 1.1vw;
+}
+
 .skill-card h4 {
   margin: 0 0 1vw 0;
   font-size: 1.05vw;
@@ -591,6 +607,12 @@
 
 .about:hover {
   color: #2d2d2d !important;
+}
+
+.brand-card img {
+  height: 8vw;
+  width: 8vw;
+  object-fit: contain;
 }
 
 @media (max-width: 769px) {
@@ -849,7 +871,23 @@
     margin: 0 0 2vw 0 !important;
   }
 
+  .brand-card img {
+    height: 20vw;
+    width: 20vw;
+    object-fit: contain;
+  }
+
   .skill-card p {
     font-size: 2.3vw !important;
+  }
+  .about-brands {
+    gap: 5vw;
+    width: 84vw;
+    margin: 6vw auto;
+    overflow-y: auto;
+  }
+
+  .about-brands::-webkit-scrollbar {
+    display: none !important;
   }
 }

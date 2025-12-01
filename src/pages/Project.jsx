@@ -146,8 +146,8 @@ export default function Project() {
         </Link>
 
         <nav>
-          <Link to="/" className="brand">
-            Home
+          <Link to="/about" className="brand">
+            About me
           </Link>
         </nav>
       </header>

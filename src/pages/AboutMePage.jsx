@@ -7,7 +7,6 @@ export default function AboutMePage() {
     <>
       <main className="home">
         <AboutMeHeader />
-
         <div className="about-sheet__card">
           <div className="about-card">
             <div className="about-card__meta">
@@ -52,6 +51,49 @@ export default function AboutMePage() {
             <article className="skill-card">
               <h4>Branding</h4>
               <p>Highly skilled and accomplished Senior Visual Designer.</p>
+            </article>
+          </div>
+          <div className="about-brands">
+            <article className="brand-card">
+              <img
+                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-1.png"
+                alt="Arata"
+              />
+            </article>
+
+            <article className="brand-card">
+              <img
+                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/bannstudio-1.png"
+                alt="Bann Studio"
+              />
+            </article>
+
+            <article className="brand-card">
+              <img
+                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/bombay_shaving_company-1.png"
+                alt="Bombay Shaving Company"
+              />
+            </article>
+
+            <article className="brand-card">
+              <img
+                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/huft-1.png"
+                alt="Heads Up For Tails"
+              />
+            </article>
+
+            <article className="brand-card">
+              <img
+                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/pilgrim-1.png"
+                alt="Pilgrim"
+              />
+            </article>
+
+            <article className="brand-card">
+              <img
+                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/suhaag.png"
+                alt="Suhaag"
+              />
             </article>
           </div>
         </div>
