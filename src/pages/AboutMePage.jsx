@@ -53,49 +53,86 @@ export default function AboutMePage() {
               <p>Highly skilled and accomplished Senior Visual Designer.</p>
             </article>
           </div>
-          <div className="about-brands">
-            <article className="brand-card">
-              <img
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-1.png"
-                alt="Arata"
-              />
-            </article>
+          <div className="about-brands marquee">
+            <div className="marquee-track">
+              {/* ORIGINAL SET */}
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-1.png"
+                  alt="Arata"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/bannstudio-1.png"
+                  alt="Bann Studio"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/bombay_shaving_company-1.png"
+                  alt="Bombay Shaving Company"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/huft-1.png"
+                  alt="Heads Up For Tails"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/pilgrim-1.png"
+                  alt="Pilgrim"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/suhaag.png"
+                  alt="Suhaag"
+                />
+              </article>
 
-            <article className="brand-card">
-              <img
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/bannstudio-1.png"
-                alt="Bann Studio"
-              />
-            </article>
-
-            <article className="brand-card">
-              <img
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/bombay_shaving_company-1.png"
-                alt="Bombay Shaving Company"
-              />
-            </article>
-
-            <article className="brand-card">
-              <img
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/huft-1.png"
-                alt="Heads Up For Tails"
-              />
-            </article>
-
-            <article className="brand-card">
-              <img
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/pilgrim-1.png"
-                alt="Pilgrim"
-              />
-            </article>
-
-            <article className="brand-card">
-              <img
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/suhaag.png"
-                alt="Suhaag"
-              />
-            </article>
+              {/* DUPLICATE SET FOR INFINITE LOOP */}
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-1.png"
+                  alt="Arata"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/bannstudio-1.png"
+                  alt="Bann Studio"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/bombay_shaving_company-1.png"
+                  alt="Bombay Shaving Company"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/huft-1.png"
+                  alt="Heads Up For Tails"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/pilgrim-1.png"
+                  alt="Pilgrim"
+                />
+              </article>
+              <article className="brand-card">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/suhaag.png"
+                  alt="Suhaag"
+                />
+              </article>
+            </div>
           </div>
+
           <div className="about-handles">
             <a href="">
               <img

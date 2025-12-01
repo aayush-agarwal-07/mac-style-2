@@ -563,6 +563,9 @@
   justify-items: center;
   gap: 1.8vw;
   margin-top: 2vw;
+  overflow: hidden;
+  width: 100%;
+  position: relative;
 }
 
 /* single small skill card */
@@ -613,6 +616,29 @@
   height: 8vw;
   width: 8vw;
   object-fit: contain;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 3rem;
+  animation: scroll 20s linear infinite;
+  width: max-content;
+}
+
+/* Infinite scroll animation */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.brand-card img:hover {
+  opacity: 1;
 }
 
 .about-handles {
@@ -866,11 +892,11 @@
     margin-right: 9.5vw;
   }
   .about-brands > *:first-child {
-    padding-left: 9.5vw;
+    padding-left: 5vw;
   }
 
   .about-brands > *:last-child {
-    padding-right: 9.5vw;
+    padding-right: 5vw;
   }
 
   .about-skills::-webkit-scrollbar {
@@ -902,7 +928,7 @@
     font-size: 2.3vw !important;
   }
   .about-brands {
-    gap: 7vw;
+    gap: 8vw;
     width: 100vw;
     margin: 10vw 0 2vw;
     overflow-y: auto;
