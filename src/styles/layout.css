@@ -619,6 +619,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 4vw;
+  margin-right: 2vw;
 }
 
 .about-handles img {
@@ -903,7 +904,7 @@
   .about-brands {
     gap: 7vw;
     width: 100vw;
-    margin: 10vw 0 4vw;
+    margin: 10vw 0 2vw;
     overflow-y: auto;
   }
 
