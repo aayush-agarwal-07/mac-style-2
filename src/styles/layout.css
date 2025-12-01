@@ -612,11 +612,8 @@
 .marquee-track {
   display: flex;
   flex-wrap: nowrap;
-  gap: 1.8vw;
-
-  /* the magic: track takes exact pixel width, no stretching */
+  gap: 6vw;
   width: fit-content;
-
   animation: scroll 24s linear infinite;
   will-change: transform;
 }
@@ -658,7 +655,7 @@
 
 .about-handles img {
   width: 2vw;
-  height: 2%;
+  height: 2vw;
   object-fit: contain;
   cursor: pointer;
 }
