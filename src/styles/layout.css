@@ -959,5 +959,6 @@
     position: fixed;
     bottom: 0;
     right: 4vw;
+    margin-bottom: 4vw;
   }
 }
