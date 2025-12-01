@@ -132,21 +132,20 @@ export default function AboutMePage() {
               </article>
             </div>
           </div>
-
-          <div className="about-handles">
-            <a href="">
-              <img
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/linkedin.svg"
-                alt="Bann Studio"
-              />
-            </a>
-            <a href="">
-              <img
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/resume.svg"
-                alt="Arata"
-              />
-            </a>
-          </div>
+        </div>
+        <div className="about-handles">
+          <a href="">
+            <img
+              src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/linkedin.svg"
+              alt="Bann Studio"
+            />
+          </a>
+          <a href="">
+            <img
+              src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/resume.svg"
+              alt="Arata"
+            />
+          </a>
         </div>
       </main>
     </>

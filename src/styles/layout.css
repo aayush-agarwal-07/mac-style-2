@@ -489,7 +489,7 @@
   position: relative;
   background: var(--sheet);
   border-radius: 1.6vw;
-  padding: 8vw 12vw;
+  padding: 8vw 12vw 0;
   box-shadow: 0 8px 24px var(--card-shadow);
   overflow: hidden;
   min-height: 55vh;
@@ -553,6 +553,7 @@
 .about-skills {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
   gap: 1.8vw;
   margin-top: 2vw;
 }
@@ -562,10 +563,15 @@
   grid-template-columns: repeat(6, 1fr);
   justify-items: center;
   gap: 1.8vw;
-  margin-top: 2vw;
+  margin-top: 1vw;
   overflow: hidden;
   width: 100%;
   position: relative;
+}
+
+.about-handles {
+  margin-top: 2vw;
+  margin-bottom: 8vw;
 }
 
 /* single small skill card */
@@ -613,8 +619,8 @@
 }
 
 .brand-card img {
-  height: 8vw;
-  width: 8vw;
+  height: 6vw;
+  width: 6vw;
   object-fit: contain;
   opacity: 0.9;
   transition: opacity 0.3s ease;
@@ -644,13 +650,13 @@
 .about-handles {
   display: flex;
   justify-content: flex-end;
-  gap: 4vw;
+  gap: 1.5vw;
   margin-right: 2vw;
 }
 
 .about-handles img {
-  width: 3vw;
-  height: 3vw;
+  width: 2vw;
+  height: 2%;
   object-fit: contain;
   cursor: pointer;
 }
