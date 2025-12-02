@@ -277,3 +277,229 @@ body::-webkit-scrollbar {
     height: 220px;
   }
 }
+
+/* ensure preview and overlay don't feed gestures to the browser */
+.interactive-image,
+.iv-overlay,
+.iv-window,
+.iv-body,
+.iv-image {
+  touch-action: none;
+  -ms-touch-action: none;
+}
+
+.maximize-btn {
+  position: fixed;
+  left: 10%;
+  top: 25%;
+  z-index: 1200;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+/* overlay backdrop */
+.iv-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 4000;
+}
+.iv-overlay.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+/* window */
+.iv-window {
+  width: min(92vw, 1200px);
+  max-height: 88vh;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 30px 80px rgba(10, 10, 10, 0.5);
+  overflow: hidden;
+  transform: translateY(12px) scale(0.99);
+  transition: transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 200ms ease;
+  z-index: 4001;
+}
+.iv-overlay.open .iv-window {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* topbar */
+.iv-topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  background: linear-gradient(#fafafa, #f6f6f6);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.mac-controls {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-left: 8px;
+}
+.mac {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 0;
+  box-shadow: inset 0 -1px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  padding: 0 !important;
+}
+.mac-close {
+  background: #ff5f56;
+}
+.mac-min {
+  background: #ffbd2e;
+}
+.mac-zoom {
+  background: #27c93f;
+}
+.iv-title {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* actions topbar */
+.iv-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-right: 10px;
+}
+.zoom-display {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  margin-right: 0.6rem;
+  width: 5vw;
+}
+.iv-btn {
+  /* background: rgba(255, 255, 255, 0.97); */
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* slider group (compact) */
+.zoom-slider {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: 8px;
+}
+.slide-icon {
+  background: transparent;
+  border: 0;
+  font-weight: 700;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 180px;
+  height: 8px;
+  background: linear-gradient(90deg, #dfe6ee, #eef4fb);
+  border-radius: 999px;
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1ea7ff;
+  box-shadow: 0 4px 10px rgba(30, 167, 255, 0.3);
+  cursor: pointer;
+}
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1ea7ff;
+  cursor: pointer;
+}
+
+/* body */
+.iv-body {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  height: calc(88vh - 120px);
+  overflow: hidden;
+}
+.iv-image {
+  max-width: 100%;
+  max-height: 100%;
+  user-select: none;
+  touch-action: none;
+  border-radius: 6px;
+  will-change: transform;
+  display: block;
+}
+
+/* footer */
+.iv-footer {
+  padding: 0.7rem 1rem;
+  background: #fafafa;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+.hint {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .zoom-display {
+    width: 16vw;
+    text-align: center;
+  }
+  .maximize-btn {
+    right: 3vw;
+    top: 2.2vw;
+    font-size: 18px;
+    padding: 6px 10px;
+    width: 8vw;
+    left: 79%;
+    top: 13.5%;
+  }
+  .iv-window {
+    width: 96vw;
+    border-radius: 14px;
+  }
+  .iv-topbar {
+    padding: 0.9rem;
+  }
+  .iv-body {
+    padding: 0.8rem;
+    height: calc(78vh - 120px);
+  }
+  .slider {
+    width: 120px;
+  }
+}

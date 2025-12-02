@@ -4,13 +4,14 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import projects from "../data/projects";
 import "../styles/layout.css";
 
+import ImageAside from "../components/ImageAside";
+
 export default function Project() {
   const { slug } = useParams();
   const navigate = useNavigate();
 
   const stickyRef = useRef(null);
-  const imgRef = useRef(null);
-  const rafRef = useRef(null);
+  // const imgRef = useRef(null);
 
   // find current project and its index (fallback to first)
   const { project, index } = useMemo(() => {
@@ -53,44 +54,17 @@ export default function Project() {
   }, [slug]);
 
   /* -------------------------
-     Left-image scroll -> activeInfo
+     Scroll percent handler coming from ImageAside
      ------------------------- */
-  useEffect(() => {
-    const frame = stickyRef.current;
-    if (!frame || !project?.infoPoints) return;
-
-    function updatePercent() {
-      const scrollTop = frame.scrollTop;
-      const scrollHeight = Math.max(1, frame.scrollHeight - frame.clientHeight);
-      const percent = Math.round((scrollTop / scrollHeight) * 100);
-
-      // pick last infoPoint <= percent
-      const pts = project.infoPoints || [];
-      let active = null;
-      for (const p of pts) {
-        if (percent >= p.percent) active = p;
-        else break;
-      }
-      setActiveInfo(active);
-      rafRef.current = null;
+  function handleScrollPercent(percent) {
+    const pts = project?.infoPoints || [];
+    let active = null;
+    for (const p of pts) {
+      if (percent >= p.percent) active = p;
+      else break;
     }
-
-    function onScroll() {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(updatePercent);
-    }
-
-    // attach
-    frame.addEventListener("scroll", onScroll, { passive: true });
-    // initial call
-    updatePercent();
-
-    return () => {
-      frame.removeEventListener("scroll", onScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    };
-  }, [project, slug]); // re-run when project/slug changes
+    setActiveInfo(active);
+  }
 
   /* -------------------------
      Navigation helpers
@@ -104,40 +78,6 @@ export default function Project() {
     }, 60);
   }
 
-  // const [isMsite, setIsMsite] = useState(() => {
-  //   if (typeof window === "undefined") return false;
-
-  //   const narrow = window.matchMedia("(max-width: 769px)").matches;
-  //   const touch = window.matchMedia("(pointer: coarse)").matches;
-
-  //   return narrow || touch;
-  // });
-
-  // useEffect(() => {
-  //   if (typeof window === "undefined") return;
-
-  //   const mqNarrow = window.matchMedia("(max-width: 769px)");
-  //   const mqTouch = window.matchMedia("(pointer: coarse)");
-
-  //   const update = () => {
-  //     setIsMsite(mqNarrow.matches || mqTouch.matches);
-  //   };
-
-
-  //   mqNarrow.addEventListener?.("change", update);
-  //   mqTouch.addEventListener?.("change", update);
-  //   mqNarrow.addListener?.(update);
-  //   mqTouch.addListener?.(update);
-
-  //   return () => {
-  //     mqNarrow.removeEventListener?.("change", update);
-  //     mqTouch.removeEventListener?.("change", update);
-  //     mqNarrow.removeListener?.(update);
-  //     mqTouch.removeListener?.(update);
-  //   };
-  // }, []);
-
- 
   return (
     <>
       <header className="site-header">
@@ -163,28 +103,17 @@ export default function Project() {
             </button>
           )}
         </nav>
-        {/* LEFT */}
-        <aside className="project-left" aria-label={`${project.title} visuals`}>
-          {/* <div className="left-actions">
-            <Link to="/projects" className="back-link">
-              Projects
-            </Link>
-          </div> */}
 
-          <div
-            className="sticky-frame"
-            ref={stickyRef}
-            role="region"
-            aria-label={`${project.title} image preview`}
-          >
-            <img
-              ref={imgRef}
-              src={project.hero}
-              alt={`${project.title} visual`}
-              className="left-long-image interactive-image"
-            />
-          </div>
-        </aside>
+        {/* LEFT (ImageAside handles maximize / overlay / gestures)
+            We pass stickyRef for backwards compatibility and
+            onScrollPercent to receive scroll updates. */}
+        <ImageAside
+          src={project.hero}
+          alt={`${project.title} visual`}
+          label={`${project.title} visuals`}
+          stickyRef={stickyRef}
+          onScrollPercent={handleScrollPercent}
+        />
 
         {/* RIGHT */}
         <section className="project-right" tabIndex={-1}>
@@ -218,7 +147,6 @@ export default function Project() {
           <div className="dynamic-info-panel" role="status" aria-live="polite">
             {activeInfo ? (
               <>
-                {/* <div className="info-percent">{activeInfo.percent}%</div> */}
                 <div className="info-text">{activeInfo.text}</div>
               </>
             ) : (
@@ -228,6 +156,7 @@ export default function Project() {
             )}
           </div>
         </section>
+
         {/* Next nav (uses functions to avoid ref issues) */}
         <nav className="project-nav" aria-label="Project navigation">
           {next && (
