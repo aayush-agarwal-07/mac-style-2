@@ -504,10 +504,12 @@ body::-webkit-scrollbar {
     -ms-touch-action: unset !important;
   }
   .maximize-parent {
-    width: 78.5%;
+    width: 82.1%;
     height: 6vw;
-    left: 5vh;
+    left: 4vh;
     top: 11.4vh;
+    border-top-left-radius: 4vw;
+    border-top-right-radius: 4vw;
   }
   .maximize-btn {
     position: fixed;
