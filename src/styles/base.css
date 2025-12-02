@@ -479,6 +479,11 @@ body::-webkit-scrollbar {
     width: 16vw;
     text-align: center;
   }
+
+  .interactive-image {
+    touch-action: unset !important;
+    -ms-touch-action: unset !important;
+  }
   .maximize-btn {
     position: absolute;
     font-size: 4vw;
