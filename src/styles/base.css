@@ -480,13 +480,12 @@ body::-webkit-scrollbar {
     text-align: center;
   }
   .maximize-btn {
-    right: 3vw;
-    top: 2.2vw;
-    font-size: 18px;
-    padding: 6px 10px;
+    position: absolute;
+    font-size: 4vw;
+    padding: 1vw 1.2vw;
     width: 8vw;
-    left: 79%;
-    top: 13.5%;
+    left: 86%;
+    top: 2%;
   }
   .iv-window {
     width: 96vw;
