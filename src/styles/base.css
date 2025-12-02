@@ -473,6 +473,17 @@ body::-webkit-scrollbar {
   font-size: 0.9rem;
 }
 
+.mac-maximize {
+  background: #27c93f;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 0;
+  box-shadow: inset 0 -1px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  padding: 0 !important;
+}
+
 /* responsive */
 @media (max-width: 900px) {
   .zoom-display {
