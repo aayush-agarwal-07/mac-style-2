@@ -508,19 +508,20 @@ export default function ImageAside({
             onPointerUp={onPreviewPointerUp}
             onPointerCancel={onPreviewPointerUp}
           />
-
-          <button
-            className="mac-maximize maximize-btn"
-            title="Open preview"
-            aria-label="Open preview"
-            onClick={() => {
-              setOpen(true);
-              // ensure initial zoom/focus when opened manually
-              setScale(INITIAL_SCALE);
-              setTranslate({ x: 0, y: 0 });
-              //    type="button"
-            }}
-          ></button>
+          <div className="maximize-parent">
+            <button
+              className="mac-maximize maximize-btn"
+              title="Open preview"
+              aria-label="Open preview"
+              onClick={() => {
+                setOpen(true);
+                // ensure initial zoom/focus when opened manually
+                setScale(INITIAL_SCALE);
+                setTranslate({ x: 0, y: 0 });
+                //    type="button"
+              }}
+            ></button>
+          </div>
         </div>
       </aside>
 
