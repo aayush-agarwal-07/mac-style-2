@@ -506,14 +506,14 @@ body::-webkit-scrollbar {
   .maximize-parent {
     width: 78.5%;
     height: 6vw;
-    left: 11vh;
+    left: 5vh;
     top: 11.4vh;
   }
   .maximize-btn {
     position: fixed;
     width: 4vw;
     height: 4vw;
-    left: 84vh;
+    left: 38vh;
     top: 11.9vh;
   }
   .iv-window {
