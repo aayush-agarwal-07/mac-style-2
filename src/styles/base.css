@@ -504,9 +504,9 @@ body::-webkit-scrollbar {
     -ms-touch-action: unset !important;
   }
   .maximize-parent {
-    width: 81.9%;
+    width: 81.7%;
     height: 6vw;
-    left: 4.2vh;
+    left: 4.3vh;
     top: 11.4vh;
     border-top-left-radius: 4vw;
     border-top-right-radius: 4vw;
@@ -515,7 +515,7 @@ body::-webkit-scrollbar {
     position: fixed;
     width: 4vw;
     height: 4vw;
-    left: 38vh;
+    left: 39.5vh;
     top: 11.9vh;
   }
   .iv-window {
