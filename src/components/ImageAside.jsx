@@ -9,9 +9,9 @@ export default function ImageAside({
   onScrollPercent = null,
   hiResSrc = null, // optional hi-res source for extreme zoom
 }) {
-  const INITIAL_SCALE = 10; // 1000%
-  const MIN_SCALE = 0.1;
-  const MAX_SCALE = 30;
+  const INITIAL_SCALE = 0.5; // 1000%
+  const MIN_SCALE = 0.5;
+  const MAX_SCALE = 1.8;
 
   const [open, setOpen] = useState(false);
   const [scale, setScale] = useState(INITIAL_SCALE);

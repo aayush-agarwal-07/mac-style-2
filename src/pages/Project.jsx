@@ -11,7 +11,7 @@ export default function Project() {
   const navigate = useNavigate();
 
   const stickyRef = useRef(null);
-  // const imgRef = useRef(null);
+  // const stickyFrameRef = useRef(null);
 
   // find current project and its index (fallback to first)
   const { project, index } = useMemo(() => {
@@ -115,6 +115,9 @@ export default function Project() {
             stickyRef.current = el;
           }}
           onScrollPercent={handleScrollPercent}
+          // stickyRef={(node) => {
+          //   stickyFrameRef.current = node;
+          // }}
         />
 
         {/* RIGHT */}
