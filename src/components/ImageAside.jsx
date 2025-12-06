@@ -6,47 +6,94 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import "../styles/base.css"; // adjust if your CSS file is named differently
+import "../styles/base.css";
 
+/**
+ * ImageAside
+ * Props:
+ *  - src (string) : preview (low/normal) src shown in sticky-frame
+ *  - hiResSrc (string|optional): hi-res image used inside overlay to avoid pixelation
+ *  - alt, label
+ *  - stickyRef (optional) : object or function to forward sticky-frame node
+ *  - onScrollPercent(percent) optional callback
+ *
+ * Key improvements:
+ *  - preloads hiResSrc for overlay
+ *  - applies transform directly to DOM (rAF) for snappy interaction -> no white flashes
+ *  - exposes slider + logarithmic mapping for large zoom ranges
+ *  - prevents native pinch-to-zoom while overlay open
+ */
 export default function ImageAside({
   src,
+  hiResSrc = null,
   alt = "Preview image",
   label = "Preview",
-  stickyRef = null,
-  onScrollPercent = null, // callback(percent)
+  stickyRefCallback = null,
+  onScrollPercent = null,
 }) {
-  // Zoom: initial 1000% = scale 10
+  // zoom units: scale multiplier (1 = 100%). We use INITIAL_SCALE = 10 (1000%) like you asked.
   const INITIAL_SCALE = 10;
   const MIN_SCALE = 0.1; // 10%
-  const MAX_SCALE = 30; // 3000%
+  const MAX_SCALE = 30; // 3000%+
 
+  // overlay open state & UI state
   const [open, setOpen] = useState(false);
-  const [scale, setScale] = useState(INITIAL_SCALE);
-  const [translate, setTranslate] = useState({ x: 0, y: 0 });
+  // keep a light state for UI (zoom display + slider). The heavy realtime transform uses refs + direct DOM writes
+  const [uiScale, setUiScale] = useState(INITIAL_SCALE);
+  const [hiResLoaded, setHiResLoaded] = useState(false);
 
-  const [isPanning, setIsPanning] = useState(false);
-  const startPan = useRef(null);
-
-  const viewerRef = useRef(null);
-  const ivImageRef = useRef(null);
-  const previewRef = useRef(null);
+  // refs for DOM nodes
   const stickyFrameRef = useRef(null);
+  const previewRef = useRef(null); // preview image element in sticky frame
+  const viewerRef = useRef(null); // whole overlay window
+  const ivImageRef = useRef(null); // image inside overlay
 
+  // pointer / pinch state
   const pointers = useRef(new Map());
-  const lastPinch = useRef(null);
   const pointersPreview = useRef(new Map());
   const previewPinchStart = useRef(null);
+  const lastPinch = useRef(null);
+  const startPan = useRef(null);
+  const isPanning = useRef(false);
 
-  // momentum variables
+  // momentum
   const lastMove = useRef({ t: 0, x: 0, y: 0 });
   const velocity = useRef({ x: 0, y: 0 });
   const momentumRaf = useRef(null);
 
-  /* ---------- helpers ---------- */
+  // "live" transform values (refs to avoid React rerenders)
+  const currentScale = useRef(INITIAL_SCALE);
+  const currentTranslate = useRef({ x: 0, y: 0 });
+
+  // rAF handle to batch DOM writes
+  const raf = useRef(null);
+
+  /* ---------- small helpers ---------- */
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 
-  // Constrain translate to avoid blank space showing
+  // mapping for slider (logarithmic)
+  const logMin = useMemo(() => Math.log(MIN_SCALE), []);
+  const logMax = useMemo(() => Math.log(MAX_SCALE), []);
+  const scaleToSlider = useCallback(
+    (s) => {
+      const v = (Math.log(s) - logMin) / (logMax - logMin);
+      return v * 100;
+    },
+    [logMin, logMax]
+  );
+  const sliderToScale = useCallback(
+    (v) => {
+      const t = v / 100;
+      const s = Math.exp(logMin + t * (logMax - logMin));
+      return clamp(s, MIN_SCALE, MAX_SCALE);
+    },
+    [logMin, logMax]
+  );
+
+  /* ---------- Constrain translate to image/container sizes.
+       Uses ivImageRef (which will point to the hi-res or src image element).
+  ---------- */
   const constrainTranslate = useCallback((tx, ty, s) => {
     const img = ivImageRef.current;
     const win = viewerRef.current;
@@ -82,80 +129,111 @@ export default function ImageAside({
     return { x: cx, y: cy };
   }, []);
 
-  /* ---------- Forward stickyRef and attach scroll listener ---------- */
+  /* ---------- expose stickyFrame DOM node to parent (object or function) and attach scroll event ---------- */
+  // NEW — accept a callback prop named stickyRefCallback
   useEffect(() => {
-    // expose DOM node to parent stickyRef
-    if (stickyRef) {
-      if (typeof stickyRef === "object")
-        // eslint-disable-next-line react-hooks/immutability
-        stickyRef.current = stickyFrameRef.current;
-      else if (typeof stickyRef === "function")
-        stickyRef(stickyFrameRef.current);
+    // if a callback provided, call it with the node (or null on cleanup)
+    if (typeof stickyRefCallback === "function") {
+      try {
+        stickyRefCallback(stickyFrameRef.current);
+      } catch {
+        /*error*/
+      }
     }
 
     const el = stickyFrameRef.current;
     if (!el) return () => {};
 
-    let raf = null;
+    let frameHandle = null;
     const updatePercent = () => {
       const scrollTop = el.scrollTop;
       const scrollHeight = Math.max(1, el.scrollHeight - el.clientHeight);
       const percent = Math.round((scrollTop / scrollHeight) * 100);
       if (typeof onScrollPercent === "function") onScrollPercent(percent);
-      raf = null;
+      frameHandle = null;
     };
 
     const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(updatePercent);
+      if (frameHandle) return;
+      frameHandle = requestAnimationFrame(updatePercent);
     };
 
     el.addEventListener("scroll", onScroll, { passive: true });
-    // initial call
     updatePercent();
 
     return () => {
       el.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-      // cleanup external ref
-      if (stickyRef) {
-        if (typeof stickyRef === "object" && stickyRef.current === el)
-          stickyRef.current = null;
-        else if (typeof stickyRef === "function") {
-          try {
-            stickyRef(null);
-          } catch {
-            /*error*/
-          }
+      if (frameHandle) cancelAnimationFrame(frameHandle);
+      // cleanup callback
+      if (typeof stickyRefCallback === "function") {
+        try {
+          stickyRefCallback(null);
+        } catch {
+          /*error*/
         }
       }
     };
-  }, [stickyRef, onScrollPercent]);
+  }, [stickyRefCallback, onScrollPercent]);
 
-  /* ---------- Block native pinch/zoom while overlay open ---------- */
+  /* ---------- preload hiResSrc for overlay for crisp zoom (desktop) ---------- */
+  // preload hi-res image (robust + avoids cascading setState warning)
+  useEffect(() => {
+    if (!hiResSrc) {
+      // schedule the false update off the immediate effect callback
+      const id = window.requestAnimationFrame(() => setHiResLoaded(false));
+      return () => window.cancelAnimationFrame(id);
+    }
+
+    let mounted = true;
+    let rafId = null;
+    const img = new Image();
+
+    const handleLoad = () => {
+      if (!mounted) return;
+      // defer the actual setState to next animation frame to avoid synchronous cascade
+      rafId = window.requestAnimationFrame(() => {
+        if (mounted) setHiResLoaded(true);
+      });
+    };
+
+    const handleErr = () => {
+      if (!mounted) return;
+      rafId = window.requestAnimationFrame(() => {
+        if (mounted) setHiResLoaded(false);
+      });
+    };
+
+    img.onload = handleLoad;
+    img.onerror = handleErr;
+    img.src = hiResSrc;
+
+    return () => {
+      mounted = false;
+      // cleanup listeners (not strictly required on Image(), but good practice)
+      img.onload = null;
+      img.onerror = null;
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, [hiResSrc]);
+
+  /* ---------- block native pinch-to-zoom while overlay open ---------- */
   useEffect(() => {
     if (!open) return;
     const preventPinch = (e) => {
       if (e.touches && e.touches.length > 1) e.preventDefault();
     };
     const preventGesture = (e) => e.preventDefault();
-
     document.addEventListener("touchstart", preventPinch, { passive: false });
     document.addEventListener("touchmove", preventPinch, { passive: false });
     document.addEventListener("gesturestart", preventGesture);
-
     return () => {
-      document.removeEventListener("touchstart", preventPinch, {
-        passive: false,
-      });
-      document.removeEventListener("touchmove", preventPinch, {
-        passive: false,
-      });
+      document.removeEventListener("touchstart", preventPinch);
+      document.removeEventListener("touchmove", preventPinch);
       document.removeEventListener("gesturestart", preventGesture);
     };
   }, [open]);
 
-  /* ---------- Prevent Ctrl/Cmd + wheel page zoom ---------- */
+  /* ---------- prevent Ctrl/Cmd + wheel page zoom (capture) ---------- */
   const onWheelCapture = useCallback(
     (e) => {
       if (open && (e.ctrlKey || e.metaKey)) e.preventDefault();
@@ -171,7 +249,7 @@ export default function ImageAside({
       document.removeEventListener("wheel", onWheelCapture, { capture: true });
   }, [onWheelCapture]);
 
-  /* ---------- ESC close ---------- */
+  /* ---------- ESC to close ---------- */
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") setOpen(false);
@@ -180,38 +258,57 @@ export default function ImageAside({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  /* ---------- EXponential wheel zoom (fast & smooth) ---------- */
+  /* ---------- DOM transform writer (batched rAF) ---------- */
+  const writeTransform = useCallback(() => {
+    if (!ivImageRef.current) return;
+    const s = currentScale.current;
+    const t = currentTranslate.current;
+    ivImageRef.current.style.transform = `translate(${t.x}px, ${t.y}px) scale(${s})`;
+    // keep UI scale display updated (debounced-ish): update state every 80ms max
+    // we throttle: cancel previous set and schedule quick update
+    if (raf.current) {
+      // already scheduled UI update
+    } else {
+      raf.current = requestAnimationFrame(() => {
+        setUiScale(currentScale.current);
+        raf.current = null;
+      });
+    }
+  }, []);
+
+  /* ---------- wheel zoom (overlay) - exponential for fast jumps */
   function onWheel(e) {
     if (!open) return;
     e.preventDefault();
 
-    // delta direction (positive: zoom in)
     const delta = -e.deltaY || 0;
+    // exponential growth: tweak divisor for sensitivity
+    const zoomExp = Math.exp(delta / 300);
+    const next = clamp(currentScale.current * zoomExp, MIN_SCALE, MAX_SCALE);
 
-    // exponential factor: smaller denominator -> faster jumps
-    // tuned for smooth navigation across large ranges
-    const zoomExp = Math.exp(delta / 300); // tune divisor (300) to taste
-    const next = clamp(scale * zoomExp, MIN_SCALE, MAX_SCALE);
-
+    // compute zoom focal using viewer rect
     const rect = viewerRef.current?.getBoundingClientRect();
     if (!rect) {
-      setScale(next);
+      currentScale.current = next;
+      writeTransform();
       return;
     }
 
-    // zoom towards pointer
-    const cx = e.clientX - rect.left - rect.width / 2 - translate.x;
-    const cy = e.clientY - rect.top - rect.height / 2 - translate.y;
-    const ratio = next / scale;
-    const nx = translate.x - cx * (ratio - 1);
-    const ny = translate.y - cy * (ratio - 1);
+    const cx =
+      e.clientX - rect.left - rect.width / 2 - currentTranslate.current.x;
+    const cy =
+      e.clientY - rect.top - rect.height / 2 - currentTranslate.current.y;
+    const ratio = next / currentScale.current;
+    const nx = currentTranslate.current.x - cx * (ratio - 1);
+    const ny = currentTranslate.current.y - cy * (ratio - 1);
 
     const limited = constrainTranslate(nx, ny, next);
-    setScale(next);
-    setTranslate(limited);
+    currentScale.current = next;
+    currentTranslate.current = limited;
+    writeTransform();
   }
 
-  /* ---------- Overlay pointer handlers (pan + pinch) ---------- */
+  /* ---------- pointer handlers for overlay (pan & pinch) ---------- */
   function onPointerDown(e) {
     try {
       e.target.setPointerCapture?.(e.pointerId);
@@ -220,6 +317,7 @@ export default function ImageAside({
     }
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
+    // cancel any running momentum
     if (momentumRaf.current) {
       cancelAnimationFrame(momentumRaf.current);
       momentumRaf.current = null;
@@ -227,12 +325,11 @@ export default function ImageAside({
     }
 
     if (pointers.current.size === 1) {
-      // store starting pan offset relative to translate
       startPan.current = {
-        x: e.clientX - translate.x,
-        y: e.clientY - translate.y,
+        x: e.clientX - currentTranslate.current.x,
+        y: e.clientY - currentTranslate.current.y,
       };
-      setIsPanning(true);
+      isPanning.current = true;
       lastMove.current = { t: performance.now(), x: e.clientX, y: e.clientY };
     } else if (pointers.current.size === 2) {
       const [a, b] = Array.from(pointers.current.values());
@@ -245,44 +342,57 @@ export default function ImageAside({
     if (!pointers.current.has(e.pointerId)) return;
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-    if (pointers.current.size === 1 && isPanning && startPan.current) {
-      // pan by pointer delta (smoother than re-calculating absolute sometimes)
+    if (pointers.current.size === 1 && isPanning.current && startPan.current) {
       const nx = e.clientX - startPan.current.x;
       const ny = e.clientY - startPan.current.y;
-      const limited = constrainTranslate(nx, ny, scale);
-      setTranslate(limited);
-
+      const limited = constrainTranslate(nx, ny, currentScale.current);
+      currentTranslate.current = limited;
+      // velocity for momentum
       const now = performance.now();
       const dt = Math.max(1, now - lastMove.current.t);
       const vx = (e.clientX - lastMove.current.x) / dt;
       const vy = (e.clientY - lastMove.current.y) / dt;
       velocity.current = { x: vx, y: vy };
       lastMove.current = { t: now, x: e.clientX, y: e.clientY };
+
+      writeTransform();
     } else if (pointers.current.size === 2) {
       const arr = Array.from(pointers.current.values());
       const d = distance(arr[0], arr[1]);
       if (lastPinch.current && Math.abs(d - lastPinch.current) > 2) {
         const ratio = d / lastPinch.current;
-        const nextScale = clamp(scale * ratio, MIN_SCALE, MAX_SCALE);
+        const nextScale = clamp(
+          currentScale.current * ratio,
+          MIN_SCALE,
+          MAX_SCALE
+        );
 
         const rect = viewerRef.current?.getBoundingClientRect();
         if (!rect) {
-          setScale(nextScale);
+          currentScale.current = nextScale;
+          writeTransform();
           lastPinch.current = d;
           return;
         }
 
         const centerX =
-          (arr[0].x + arr[1].x) / 2 - rect.left - rect.width / 2 - translate.x;
+          (arr[0].x + arr[1].x) / 2 -
+          rect.left -
+          rect.width / 2 -
+          currentTranslate.current.x;
         const centerY =
-          (arr[0].y + arr[1].y) / 2 - rect.top - rect.height / 2 - translate.y;
-        const ratio2 = nextScale / scale;
-        const nx = translate.x - centerX * (ratio2 - 1);
-        const ny = translate.y - centerY * (ratio2 - 1);
+          (arr[0].y + arr[1].y) / 2 -
+          rect.top -
+          rect.height / 2 -
+          currentTranslate.current.y;
+        const ratio2 = nextScale / currentScale.current;
+        const nx = currentTranslate.current.x - centerX * (ratio2 - 1);
+        const ny = currentTranslate.current.y - centerY * (ratio2 - 1);
 
         const limited = constrainTranslate(nx, ny, nextScale);
-        setScale(nextScale);
-        setTranslate(limited);
+        currentScale.current = nextScale;
+        currentTranslate.current = limited;
+        writeTransform();
         lastPinch.current = d;
       }
     }
@@ -290,22 +400,23 @@ export default function ImageAside({
 
   function startMomentum() {
     const friction = 0.95;
-    const minV = 0.001;
+    const minV = 0.0005;
     let vx = velocity.current.x;
     let vy = velocity.current.y;
 
     function step() {
       const dt = 16;
-      const dx = vx * dt;
-      const dy = vy * dt;
-      const nextTx = translate.x + dx;
-      const nextTy = translate.y + dy;
-      const limited = constrainTranslate(nextTx, nextTy, scale);
+      const dx = vx * dt * 20; // scale velocity to visible px movement (tweak)
+      const dy = vy * dt * 20;
+      const nextTx = currentTranslate.current.x + dx;
+      const nextTy = currentTranslate.current.y + dy;
+      const limited = constrainTranslate(nextTx, nextTy, currentScale.current);
 
       if (limited.x !== nextTx) vx *= 0.6;
       if (limited.y !== nextTy) vy *= 0.6;
 
-      setTranslate(limited);
+      currentTranslate.current = limited;
+      writeTransform();
 
       vx *= friction;
       vy *= friction;
@@ -320,7 +431,7 @@ export default function ImageAside({
       momentumRaf.current = requestAnimationFrame(step);
     }
 
-    if (Math.hypot(vx, vy) > 0.002) {
+    if (Math.hypot(velocity.current.x, velocity.current.y) > 0.002) {
       momentumRaf.current = requestAnimationFrame(step);
     } else {
       velocity.current = { x: 0, y: 0 };
@@ -335,16 +446,18 @@ export default function ImageAside({
       /*error*/
     }
     if (pointers.current.size === 0) {
-      setIsPanning(false);
+      isPanning.current = false;
       startPan.current = null;
       lastPinch.current = null;
       if (Math.hypot(velocity.current.x, velocity.current.y) > 0.002) {
         startMomentum();
       }
+      // sync UI scale now
+      setUiScale(currentScale.current);
     }
   }
 
-  /* ---------- Preview pinch -> open overlay seeded ---------- */
+  /* ---------- preview sticky-frame pinch opens overlay seeded ---------- */
   function onPreviewPointerDown(e) {
     try {
       e.target.setPointerCapture?.(e.pointerId);
@@ -352,32 +465,32 @@ export default function ImageAside({
       /*error*/
     }
     pointersPreview.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-
     if (pointersPreview.current.size === 2) {
       const arr = Array.from(pointersPreview.current.values());
       previewPinchStart.current = distance(arr[0], arr[1]);
       e.preventDefault?.();
     }
   }
-
   function onPreviewPointerMove(e) {
     if (!pointersPreview.current.has(e.pointerId)) return;
     pointersPreview.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-
     if (pointersPreview.current.size === 2 && previewPinchStart.current) {
       const arr = Array.from(pointersPreview.current.values());
       const nowD = distance(arr[0], arr[1]);
       const ratio = nowD / previewPinchStart.current;
-
       if (!open && Math.abs(ratio - 1) > 0.06) {
+        // open overlay AND seed scale+translate for natural feel
         setOpen(true);
-
+        // choose hi-res if available (preload started earlier)
+        if (hiResSrc && !hiResLoaded) {
+          // let preload finish quickly (hiResLoaded true when done)
+        }
         const initialScale = clamp(
           INITIAL_SCALE * ratio * 1.2,
           MIN_SCALE,
           MAX_SCALE
         );
-
+        // seed translate toward pinch center
         const centerX = (arr[0].x + arr[1].x) / 2;
         const centerY = (arr[0].y + arr[1].y) / 2;
         const vw = window.innerWidth;
@@ -385,15 +498,15 @@ export default function ImageAside({
         const cx = centerX - vw / 2;
         const cy = centerY - vh / 2;
         const seedTranslate = { x: -cx * 0.15, y: -cy * 0.15 };
-
         const limited = constrainTranslate(
           seedTranslate.x,
           seedTranslate.y,
           initialScale
         );
-        setScale(initialScale);
-        setTranslate(limited);
-
+        currentScale.current = initialScale;
+        currentTranslate.current = limited;
+        writeTransform();
+        setUiScale(currentScale.current);
         previewPinchStart.current = null;
         pointersPreview.current.clear();
       } else {
@@ -401,7 +514,6 @@ export default function ImageAside({
       }
     }
   }
-
   function onPreviewPointerUp(e) {
     try {
       e.target.releasePointerCapture?.(e.pointerId);
@@ -409,37 +521,39 @@ export default function ImageAside({
       /*error*/
     }
     pointersPreview.current.delete(e.pointerId);
-    if (pointersPreview.current.size === 0) {
-      previewPinchStart.current = null;
-    }
+    if (pointersPreview.current.size === 0) previewPinchStart.current = null;
   }
 
-  /* ---------- Double-tap toggle ---------- */
+  /* ---------- double-tap toggles around pointer -> we handle transform directly ---------- */
   const lastClick = useRef(0);
   function onDoubleClick(e) {
     const now = Date.now();
-    // detect double-click/double-tap timing
     if (now - lastClick.current < 350) {
       const rect = viewerRef.current?.getBoundingClientRect();
       const clientX = e?.clientX ?? window.innerWidth / 2;
       const clientY = e?.clientY ?? window.innerHeight / 2;
-
       const targetScale =
-        scale > INITIAL_SCALE * 1.15
+        currentScale.current > INITIAL_SCALE * 1.15
           ? INITIAL_SCALE
-          : clamp(scale * 2, MIN_SCALE, MAX_SCALE);
+          : clamp(currentScale.current * 2, MIN_SCALE, MAX_SCALE);
 
       if (rect) {
-        const cx = clientX - rect.left - rect.width / 2 - translate.x;
-        const cy = clientY - rect.top - rect.height / 2 - translate.y;
-        const ratio = targetScale / scale;
-        const nx = translate.x - cx * (ratio - 1);
-        const ny = translate.y - cy * (ratio - 1);
+        const cx =
+          clientX - rect.left - rect.width / 2 - currentTranslate.current.x;
+        const cy =
+          clientY - rect.top - rect.height / 2 - currentTranslate.current.y;
+        const ratio = targetScale / currentScale.current;
+        const nx = currentTranslate.current.x - cx * (ratio - 1);
+        const ny = currentTranslate.current.y - cy * (ratio - 1);
         const limited = constrainTranslate(nx, ny, targetScale);
-        setScale(targetScale);
-        setTranslate(limited);
+        currentScale.current = targetScale;
+        currentTranslate.current = limited;
+        writeTransform();
+        setUiScale(currentScale.current);
       } else {
-        setScale(targetScale);
+        currentScale.current = targetScale;
+        writeTransform();
+        setUiScale(currentScale.current);
       }
       lastClick.current = 0;
     } else {
@@ -454,38 +568,70 @@ export default function ImageAside({
   /* ---------- Actions ---------- */
   function onClose() {
     setOpen(false);
+    // reset transform after overlay close (small delay)
+    requestAnimationFrame(() => {
+      currentScale.current = INITIAL_SCALE;
+      currentTranslate.current = { x: 0, y: 0 };
+      setUiScale(INITIAL_SCALE);
+      if (ivImageRef.current)
+        ivImageRef.current.style.transform = `translate(0px,0px) scale(${INITIAL_SCALE})`;
+    });
   }
   function onMinimize() {
-    setScale(INITIAL_SCALE);
-    setTranslate({ x: 0, y: 0 });
+    currentScale.current = INITIAL_SCALE;
+    currentTranslate.current = { x: 0, y: 0 };
+    writeTransform();
+    setUiScale(INITIAL_SCALE);
     setOpen(false);
   }
   function onZoomMax() {
-    setScale((s) => clamp(s * 1.5, MIN_SCALE, MAX_SCALE));
+    const next = clamp(currentScale.current * 1.5, MIN_SCALE, MAX_SCALE);
+    currentScale.current = next;
+    writeTransform();
+    setUiScale(next);
   }
 
-  /* ---------- UI helpers: slider (log scale) ---------- */
-  const logMin = useMemo(() => Math.log(MIN_SCALE), []);
-  const logMax = useMemo(() => Math.log(MAX_SCALE), []);
-  const scaleToSlider = useCallback(
-    (s) => {
-      // map scale to 0..100
-      const v = (Math.log(s) - logMin) / (logMax - logMin);
-      return v * 100;
-    },
-    [logMin, logMax]
-  );
-  const sliderToScale = useCallback(
-    (v) => {
-      const t = v / 100;
-      const s = Math.exp(logMin + t * (logMax - logMin));
-      return clamp(s, MIN_SCALE, MAX_SCALE);
-    },
-    [logMin, logMax]
-  );
+  /* ---------- slider value derived from current scale (for controlled input) ---------- */
+  const sliderValue = scaleToSlider(uiScale);
 
-  // slider value derived from scale
-  const sliderValue = scaleToSlider(scale);
+  /* ---------- when overlay open: ensure overlay image uses hiResSrc (if loaded) to avoid pixelation.
+       We set src directly on the DOM image to avoid React re-render penalty.
+  ---------- */
+  useEffect(() => {
+    if (!ivImageRef.current) return;
+    const imgEl = ivImageRef.current;
+    const target = hiResSrc && hiResLoaded ? hiResSrc : src;
+    if (imgEl.src !== target) {
+      // swap smoothly: keep current image visible until new is available, then swap
+      const tmp = new Image();
+      tmp.src = target;
+      tmp.onload = () => {
+        imgEl.src = target;
+        imgEl.style.opacity = "1";
+      };
+      tmp.onerror = () => {
+        // fallback keep current
+      };
+    }
+  }, [open, hiResLoaded, hiResSrc, src]);
+
+  /* ---------- write initial transform when overlay opens ---------- */
+  useEffect(() => {
+    if (open) {
+      // make sure UI shows initial scale
+      setUiScale(currentScale.current);
+      // small rAF to ensure DOM available
+      requestAnimationFrame(() => writeTransform());
+    }
+  }, [open, writeTransform]);
+
+  /* ---------- cleanup rafs on unmount ---------- */
+  useEffect(() => {
+    return () => {
+      if (raf.current) cancelAnimationFrame(raf.current);
+      if (momentumRaf.current) cancelAnimationFrame(momentumRaf.current);
+    };
+  }, []);
 
   /* ---------- Render ---------- */
   return (
@@ -507,6 +653,7 @@ export default function ImageAside({
             onPointerMove={onPreviewPointerMove}
             onPointerUp={onPreviewPointerUp}
             onPointerCancel={onPreviewPointerUp}
+            style={{ touchAction: "none" }}
           />
           <div className="maximize-parent">
             <button
@@ -515,12 +662,13 @@ export default function ImageAside({
               aria-label="Open preview"
               onClick={() => {
                 setOpen(true);
-                // ensure initial zoom/focus when opened manually
-                setScale(INITIAL_SCALE);
-                setTranslate({ x: 0, y: 0 });
-                //    type="button"
+                currentScale.current = INITIAL_SCALE;
+                currentTranslate.current = { x: 0, y: 0 };
+                setUiScale(INITIAL_SCALE);
+                // Ensure hiRes preload is used if available (see effect).
               }}
-            ></button>
+              type="button"
+            />
           </div>
         </div>
       </aside>
@@ -567,13 +715,15 @@ export default function ImageAside({
             <div className="iv-title">Preview</div>
 
             <div className="iv-actions">
-              <div className="zoom-display">{Math.round(scale * 100)}%</div>
+              <div className="zoom-display">{Math.round(uiScale * 100)}%</div>
 
               <button
                 className="iv-btn"
                 onClick={() => {
-                  setScale(INITIAL_SCALE);
-                  setTranslate({ x: 0, y: 0 });
+                  currentScale.current = INITIAL_SCALE;
+                  currentTranslate.current = { x: 0, y: 0 };
+                  writeTransform();
+                  setUiScale(INITIAL_SCALE);
                 }}
               >
                 Fit
@@ -582,7 +732,14 @@ export default function ImageAside({
               <button
                 className="iv-btn"
                 onClick={() => {
-                  setScale((s) => clamp(s * 1.25, MIN_SCALE, MAX_SCALE));
+                  const n = clamp(
+                    currentScale.current * 1.25,
+                    MIN_SCALE,
+                    MAX_SCALE
+                  );
+                  currentScale.current = n;
+                  writeTransform();
+                  setUiScale(n);
                 }}
               >
                 +
@@ -591,21 +748,30 @@ export default function ImageAside({
               <button
                 className="iv-btn"
                 onClick={() => {
-                  setScale((s) => clamp(s / 1.25, MIN_SCALE, MAX_SCALE));
+                  const n = clamp(
+                    currentScale.current / 1.25,
+                    MIN_SCALE,
+                    MAX_SCALE
+                  );
+                  currentScale.current = n;
+                  writeTransform();
+                  setUiScale(n);
                 }}
               >
                 −
               </button>
 
-              {/* Slider */}
+              {/* Slider (log scale) */}
               <div className="zoom-slider">
                 <button
                   className="slide-icon"
                   onClick={() => {
-                    // step down a bit (logarithmic step)
-                    const cur = scaleToSlider(scale);
+                    const cur = scaleToSlider(uiScale);
                     const next = Math.max(0, cur - 6);
-                    setScale(sliderToScale(next));
+                    const s = sliderToScale(next);
+                    currentScale.current = s;
+                    writeTransform();
+                    setUiScale(s);
                   }}
                 >
                   −
@@ -620,16 +786,22 @@ export default function ImageAside({
                   value={sliderValue}
                   onChange={(ev) => {
                     const v = Number(ev.target.value);
-                    setScale(sliderToScale(v));
+                    const s = sliderToScale(v);
+                    currentScale.current = s;
+                    writeTransform();
+                    setUiScale(s);
                   }}
                 />
 
                 <button
                   className="slide-icon"
                   onClick={() => {
-                    const cur = scaleToSlider(scale);
+                    const cur = scaleToSlider(uiScale);
                     const next = Math.min(100, cur + 6);
-                    setScale(sliderToScale(next));
+                    const s = sliderToScale(next);
+                    currentScale.current = s;
+                    writeTransform();
+                    setUiScale(s);
                   }}
                 >
                   +
@@ -638,22 +810,33 @@ export default function ImageAside({
             </div>
           </div>
 
-          <div className="iv-body">
+          <div
+            className="iv-body"
+            style={{
+              background: "#111",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {/* image element used for transformation. Initially src will be preview; effect swaps to hiRes when available */}
             <img
               ref={ivImageRef}
-              src={src}
+              src={hiResSrc && hiResLoaded ? hiResSrc : src}
               alt={alt}
               draggable={false}
               onDragStart={preventDrag}
               style={{
-                transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
-                touchAction: "none",
                 transition: open
-                  ? "transform 100ms cubic-bezier(.2,.9,.2,1)"
+                  ? "transform 100ms cubic-bezier(.2,.9,.2,1), opacity 180ms linear"
                   : "none",
-                willChange: "transform",
+                willChange: "transform, opacity",
                 maxWidth: "100%",
                 maxHeight: "100%",
+                objectFit: "contain",
+                opacity: 1,
+                touchAction: "none",
+                userSelect: "none",
               }}
               className="iv-image"
             />

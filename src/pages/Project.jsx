@@ -111,7 +111,9 @@ export default function Project() {
           src={project.hero}
           alt={`${project.title} visual`}
           label={`${project.title} visuals`}
-          stickyRef={stickyRef}
+          stickyRefCallback={(el) => {
+            stickyRef.current = el;
+          }}
           onScrollPercent={handleScrollPercent}
         />
 
