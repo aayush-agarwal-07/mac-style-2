@@ -1,99 +1,54 @@
-// src/components/ImageAside.jsx
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-} from "react";
-import "../styles/base.css";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import "../styles/base.css"; // keep your existing base
 
-/**
- * ImageAside
- * Props:
- *  - src (string) : preview (low/normal) src shown in sticky-frame
- *  - hiResSrc (string|optional): hi-res image used inside overlay to avoid pixelation
- *  - alt, label
- *  - stickyRef (optional) : object or function to forward sticky-frame node
- *  - onScrollPercent(percent) optional callback
- *
- * Key improvements:
- *  - preloads hiResSrc for overlay
- *  - applies transform directly to DOM (rAF) for snappy interaction -> no white flashes
- *  - exposes slider + logarithmic mapping for large zoom ranges
- *  - prevents native pinch-to-zoom while overlay open
- */
 export default function ImageAside({
   src,
-  hiResSrc = null,
   alt = "Preview image",
   label = "Preview",
-  stickyRefCallback = null,
+  stickyRef = null,
   onScrollPercent = null,
+  hiResSrc = null, // optional hi-res source for extreme zoom
 }) {
-  // zoom units: scale multiplier (1 = 100%). We use INITIAL_SCALE = 10 (1000%) like you asked.
-  const INITIAL_SCALE = 10;
-  const MIN_SCALE = 0.1; // 10%
-  const MAX_SCALE = 30; // 3000%+
+  const INITIAL_SCALE = 10; // 1000%
+  const MIN_SCALE = 0.1;
+  const MAX_SCALE = 30;
 
-  // overlay open state & UI state
   const [open, setOpen] = useState(false);
-  // keep a light state for UI (zoom display + slider). The heavy realtime transform uses refs + direct DOM writes
-  const [uiScale, setUiScale] = useState(INITIAL_SCALE);
-  const [hiResLoaded, setHiResLoaded] = useState(false);
+  const [scale, setScale] = useState(INITIAL_SCALE);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
-  // refs for DOM nodes
+  // panning / pointer bookkeeping
+  const startPan = useRef(null);
+  const isPanningRef = useRef(false);
+
+  // refs for DOM
+  const viewerRef = useRef(null);
+  const ivImageRef = useRef(null);
+  const previewRef = useRef(null);
   const stickyFrameRef = useRef(null);
-  const previewRef = useRef(null); // preview image element in sticky frame
-  const viewerRef = useRef(null); // whole overlay window
-  const ivImageRef = useRef(null); // image inside overlay
 
-  // pointer / pinch state
+  // pointer maps
   const pointers = useRef(new Map());
+  const lastPinch = useRef(null);
   const pointersPreview = useRef(new Map());
   const previewPinchStart = useRef(null);
-  const lastPinch = useRef(null);
-  const startPan = useRef(null);
-  const isPanning = useRef(false);
+
+  // rAF batching refs
+  const pendingScale = useRef(scale);
+  const pendingTranslate = useRef(translate);
+  const rafFlush = useRef(null);
+  const isInteracting = useRef(false);
 
   // momentum
   const lastMove = useRef({ t: 0, x: 0, y: 0 });
   const velocity = useRef({ x: 0, y: 0 });
   const momentumRaf = useRef(null);
 
-  // "live" transform values (refs to avoid React rerenders)
-  const currentScale = useRef(INITIAL_SCALE);
-  const currentTranslate = useRef({ x: 0, y: 0 });
-
-  // rAF handle to batch DOM writes
-  const raf = useRef(null);
-
-  /* ---------- small helpers ---------- */
+  /* ---------- helpers ---------- */
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 
-  // mapping for slider (logarithmic)
-  const logMin = useMemo(() => Math.log(MIN_SCALE), []);
-  const logMax = useMemo(() => Math.log(MAX_SCALE), []);
-  const scaleToSlider = useCallback(
-    (s) => {
-      const v = (Math.log(s) - logMin) / (logMax - logMin);
-      return v * 100;
-    },
-    [logMin, logMax]
-  );
-  const sliderToScale = useCallback(
-    (v) => {
-      const t = v / 100;
-      const s = Math.exp(logMin + t * (logMax - logMin));
-      return clamp(s, MIN_SCALE, MAX_SCALE);
-    },
-    [logMin, logMax]
-  );
-
-  /* ---------- Constrain translate to image/container sizes.
-       Uses ivImageRef (which will point to the hi-res or src image element).
-  ---------- */
+  // compute container-fitted base size then scaled size -> constrain translate
   const constrainTranslate = useCallback((tx, ty, s) => {
     const img = ivImageRef.current;
     const win = viewerRef.current;
@@ -124,38 +79,54 @@ export default function ImageAside({
     const maxX = Math.max(0, (scaledW - containerW) / 2);
     const maxY = Math.max(0, (scaledH - containerH) / 2);
 
-    const cx = clamp(tx, -maxX, maxX);
-    const cy = clamp(ty, -maxY, maxY);
-    return { x: cx, y: cy };
+    return { x: clamp(tx, -maxX, maxX), y: clamp(ty, -maxY, maxY) };
   }, []);
 
-  /* ---------- expose stickyFrame DOM node to parent (object or function) and attach scroll event ---------- */
-  // NEW — accept a callback prop named stickyRefCallback
+  /* ---------- rAF batching: commit pendingScale/Translate once per frame ---------- */
+  function scheduleFlush() {
+    if (rafFlush.current) return;
+    rafFlush.current = window.requestAnimationFrame(() => {
+      rafFlush.current = null;
+      // apply pending values
+      const s = pendingScale.current;
+      const t = pendingTranslate.current;
+      // apply without transition to avoid flicker while interacting
+      setScale(s);
+      setTranslate(t);
+    });
+  }
+
+  // call this to update zoom/translate during pointer/wheel without setState flooding
+  function applyPending(nextScale, nextTranslate) {
+    pendingScale.current = nextScale;
+    pendingTranslate.current = nextTranslate;
+    scheduleFlush();
+  }
+
+  /* ---------- Forward stickyRef and attach scroll listener ---------- */
   useEffect(() => {
-    // if a callback provided, call it with the node (or null on cleanup)
-    if (typeof stickyRefCallback === "function") {
-      try {
-        stickyRefCallback(stickyFrameRef.current);
-      } catch {
-        /*error*/
-      }
+    if (stickyRef) {
+      if (typeof stickyRef === "object")
+        stickyRef.current = stickyFrameRef.current;
+      else if (typeof stickyRef === "function")
+        stickyRef(stickyFrameRef.current);
     }
 
     const el = stickyFrameRef.current;
     if (!el) return () => {};
 
-    let frameHandle = null;
+    let raf = null;
     const updatePercent = () => {
       const scrollTop = el.scrollTop;
       const scrollHeight = Math.max(1, el.scrollHeight - el.clientHeight);
       const percent = Math.round((scrollTop / scrollHeight) * 100);
       if (typeof onScrollPercent === "function") onScrollPercent(percent);
-      frameHandle = null;
+      raf = null;
     };
 
     const onScroll = () => {
-      if (frameHandle) return;
-      frameHandle = requestAnimationFrame(updatePercent);
+      if (raf) return;
+      raf = requestAnimationFrame(updatePercent);
     };
 
     el.addEventListener("scroll", onScroll, { passive: true });
@@ -163,60 +134,22 @@ export default function ImageAside({
 
     return () => {
       el.removeEventListener("scroll", onScroll);
-      if (frameHandle) cancelAnimationFrame(frameHandle);
-      // cleanup callback
-      if (typeof stickyRefCallback === "function") {
-        try {
-          stickyRefCallback(null);
-        } catch {
-          /*error*/
+      if (raf) cancelAnimationFrame(raf);
+      if (stickyRef) {
+        if (typeof stickyRef === "object" && stickyRef.current === el)
+          stickyRef.current = null;
+        else if (typeof stickyRef === "function") {
+          try {
+            stickyRef(null);
+          } catch {
+            /*error*/
+          }
         }
       }
     };
-  }, [stickyRefCallback, onScrollPercent]);
+  }, [stickyRef, onScrollPercent]);
 
-  /* ---------- preload hiResSrc for overlay for crisp zoom (desktop) ---------- */
-  // preload hi-res image (robust + avoids cascading setState warning)
-  useEffect(() => {
-    if (!hiResSrc) {
-      // schedule the false update off the immediate effect callback
-      const id = window.requestAnimationFrame(() => setHiResLoaded(false));
-      return () => window.cancelAnimationFrame(id);
-    }
-
-    let mounted = true;
-    let rafId = null;
-    const img = new Image();
-
-    const handleLoad = () => {
-      if (!mounted) return;
-      // defer the actual setState to next animation frame to avoid synchronous cascade
-      rafId = window.requestAnimationFrame(() => {
-        if (mounted) setHiResLoaded(true);
-      });
-    };
-
-    const handleErr = () => {
-      if (!mounted) return;
-      rafId = window.requestAnimationFrame(() => {
-        if (mounted) setHiResLoaded(false);
-      });
-    };
-
-    img.onload = handleLoad;
-    img.onerror = handleErr;
-    img.src = hiResSrc;
-
-    return () => {
-      mounted = false;
-      // cleanup listeners (not strictly required on Image(), but good practice)
-      img.onload = null;
-      img.onerror = null;
-      if (rafId) window.cancelAnimationFrame(rafId);
-    };
-  }, [hiResSrc]);
-
-  /* ---------- block native pinch-to-zoom while overlay open ---------- */
+  /* ---------- block browser pinch-to-zoom while overlay open ---------- */
   useEffect(() => {
     if (!open) return;
     const preventPinch = (e) => {
@@ -227,13 +160,17 @@ export default function ImageAside({
     document.addEventListener("touchmove", preventPinch, { passive: false });
     document.addEventListener("gesturestart", preventGesture);
     return () => {
-      document.removeEventListener("touchstart", preventPinch);
-      document.removeEventListener("touchmove", preventPinch);
+      document.removeEventListener("touchstart", preventPinch, {
+        passive: false,
+      });
+      document.removeEventListener("touchmove", preventPinch, {
+        passive: false,
+      });
       document.removeEventListener("gesturestart", preventGesture);
     };
   }, [open]);
 
-  /* ---------- prevent Ctrl/Cmd + wheel page zoom (capture) ---------- */
+  /* ---------- prevent ctrl/meta wheel page zoom while overlay open ---------- */
   const onWheelCapture = useCallback(
     (e) => {
       if (open && (e.ctrlKey || e.metaKey)) e.preventDefault();
@@ -249,7 +186,7 @@ export default function ImageAside({
       document.removeEventListener("wheel", onWheelCapture, { capture: true });
   }, [onWheelCapture]);
 
-  /* ---------- ESC to close ---------- */
+  // ESC to close
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") setOpen(false);
@@ -258,57 +195,35 @@ export default function ImageAside({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  /* ---------- DOM transform writer (batched rAF) ---------- */
-  const writeTransform = useCallback(() => {
-    if (!ivImageRef.current) return;
-    const s = currentScale.current;
-    const t = currentTranslate.current;
-    ivImageRef.current.style.transform = `translate(${t.x}px, ${t.y}px) scale(${s})`;
-    // keep UI scale display updated (debounced-ish): update state every 80ms max
-    // we throttle: cancel previous set and schedule quick update
-    if (raf.current) {
-      // already scheduled UI update
-    } else {
-      raf.current = requestAnimationFrame(() => {
-        setUiScale(currentScale.current);
-        raf.current = null;
-      });
-    }
-  }, []);
-
-  /* ---------- wheel zoom (overlay) - exponential for fast jumps */
+  /* ---------- wheel zoom: compute next target and schedule via batcher ---------- */
   function onWheel(e) {
     if (!open) return;
     e.preventDefault();
 
     const delta = -e.deltaY || 0;
-    // exponential growth: tweak divisor for sensitivity
+    // exponential zoom for quick range traversal
     const zoomExp = Math.exp(delta / 300);
-    const next = clamp(currentScale.current * zoomExp, MIN_SCALE, MAX_SCALE);
+    const next = clamp(pendingScale.current * zoomExp, MIN_SCALE, MAX_SCALE);
 
-    // compute zoom focal using viewer rect
     const rect = viewerRef.current?.getBoundingClientRect();
     if (!rect) {
-      currentScale.current = next;
-      writeTransform();
+      applyPending(next, pendingTranslate.current);
       return;
     }
 
     const cx =
-      e.clientX - rect.left - rect.width / 2 - currentTranslate.current.x;
+      e.clientX - rect.left - rect.width / 2 - pendingTranslate.current.x;
     const cy =
-      e.clientY - rect.top - rect.height / 2 - currentTranslate.current.y;
-    const ratio = next / currentScale.current;
-    const nx = currentTranslate.current.x - cx * (ratio - 1);
-    const ny = currentTranslate.current.y - cy * (ratio - 1);
+      e.clientY - rect.top - rect.height / 2 - pendingTranslate.current.y;
+    const ratio = next / pendingScale.current;
+    const nx = pendingTranslate.current.x - cx * (ratio - 1);
+    const ny = pendingTranslate.current.y - cy * (ratio - 1);
 
     const limited = constrainTranslate(nx, ny, next);
-    currentScale.current = next;
-    currentTranslate.current = limited;
-    writeTransform();
+    applyPending(next, limited);
   }
 
-  /* ---------- pointer handlers for overlay (pan & pinch) ---------- */
+  /* ---------- overlay pointer handlers (pan + pinch) ---------- */
   function onPointerDown(e) {
     try {
       e.target.setPointerCapture?.(e.pointerId);
@@ -317,7 +232,7 @@ export default function ImageAside({
     }
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-    // cancel any running momentum
+    // cancel momentum if active
     if (momentumRaf.current) {
       cancelAnimationFrame(momentumRaf.current);
       momentumRaf.current = null;
@@ -326,10 +241,11 @@ export default function ImageAside({
 
     if (pointers.current.size === 1) {
       startPan.current = {
-        x: e.clientX - currentTranslate.current.x,
-        y: e.clientY - currentTranslate.current.y,
+        x: e.clientX - pendingTranslate.current.x,
+        y: e.clientY - pendingTranslate.current.y,
       };
-      isPanning.current = true;
+      isPanningRef.current = true;
+      isInteracting.current = true;
       lastMove.current = { t: performance.now(), x: e.clientX, y: e.clientY };
     } else if (pointers.current.size === 2) {
       const [a, b] = Array.from(pointers.current.values());
@@ -342,12 +258,15 @@ export default function ImageAside({
     if (!pointers.current.has(e.pointerId)) return;
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-    if (pointers.current.size === 1 && isPanning.current && startPan.current) {
+    if (
+      pointers.current.size === 1 &&
+      isPanningRef.current &&
+      startPan.current
+    ) {
       const nx = e.clientX - startPan.current.x;
       const ny = e.clientY - startPan.current.y;
-      const limited = constrainTranslate(nx, ny, currentScale.current);
-      currentTranslate.current = limited;
-      // velocity for momentum
+      const limited = constrainTranslate(nx, ny, pendingScale.current);
+      // update velocity
       const now = performance.now();
       const dt = Math.max(1, now - lastMove.current.t);
       const vx = (e.clientX - lastMove.current.x) / dt;
@@ -355,23 +274,23 @@ export default function ImageAside({
       velocity.current = { x: vx, y: vy };
       lastMove.current = { t: now, x: e.clientX, y: e.clientY };
 
-      writeTransform();
+      applyPending(pendingScale.current, limited);
     } else if (pointers.current.size === 2) {
       const arr = Array.from(pointers.current.values());
       const d = distance(arr[0], arr[1]);
       if (lastPinch.current && Math.abs(d - lastPinch.current) > 2) {
         const ratio = d / lastPinch.current;
         const nextScale = clamp(
-          currentScale.current * ratio,
+          pendingScale.current * ratio,
           MIN_SCALE,
           MAX_SCALE
         );
 
         const rect = viewerRef.current?.getBoundingClientRect();
         if (!rect) {
-          currentScale.current = nextScale;
-          writeTransform();
+          pendingScale.current = nextScale;
           lastPinch.current = d;
+          scheduleFlush();
           return;
         }
 
@@ -379,21 +298,20 @@ export default function ImageAside({
           (arr[0].x + arr[1].x) / 2 -
           rect.left -
           rect.width / 2 -
-          currentTranslate.current.x;
+          pendingTranslate.current.x;
         const centerY =
           (arr[0].y + arr[1].y) / 2 -
           rect.top -
           rect.height / 2 -
-          currentTranslate.current.y;
-        const ratio2 = nextScale / currentScale.current;
-        const nx = currentTranslate.current.x - centerX * (ratio2 - 1);
-        const ny = currentTranslate.current.y - centerY * (ratio2 - 1);
-
+          pendingTranslate.current.y;
+        const ratio2 = nextScale / pendingScale.current;
+        const nx = pendingTranslate.current.x - centerX * (ratio2 - 1);
+        const ny = pendingTranslate.current.y - centerY * (ratio2 - 1);
         const limited = constrainTranslate(nx, ny, nextScale);
-        currentScale.current = nextScale;
-        currentTranslate.current = limited;
-        writeTransform();
+        pendingScale.current = nextScale;
+        pendingTranslate.current = limited;
         lastPinch.current = d;
+        scheduleFlush();
       }
     }
   }
@@ -406,17 +324,14 @@ export default function ImageAside({
 
     function step() {
       const dt = 16;
-      const dx = vx * dt * 20; // scale velocity to visible px movement (tweak)
-      const dy = vy * dt * 20;
-      const nextTx = currentTranslate.current.x + dx;
-      const nextTy = currentTranslate.current.y + dy;
-      const limited = constrainTranslate(nextTx, nextTy, currentScale.current);
+      const dx = vx * dt * 16; // feel tweak
+      const dy = vy * dt * 16;
+      let nextTx = pendingTranslate.current.x + dx;
+      let nextTy = pendingTranslate.current.y + dy;
+      const limited = constrainTranslate(nextTx, nextTy, pendingScale.current);
 
-      if (limited.x !== nextTx) vx *= 0.6;
-      if (limited.y !== nextTy) vy *= 0.6;
-
-      currentTranslate.current = limited;
-      writeTransform();
+      pendingTranslate.current = limited;
+      setTranslate(limited); // small direct commit for momentum smoothness
 
       vx *= friction;
       vy *= friction;
@@ -426,7 +341,6 @@ export default function ImageAside({
         velocity.current = { x: 0, y: 0 };
         return;
       }
-
       velocity.current = { x: vx, y: vy };
       momentumRaf.current = requestAnimationFrame(step);
     }
@@ -446,18 +360,16 @@ export default function ImageAside({
       /*error*/
     }
     if (pointers.current.size === 0) {
-      isPanning.current = false;
+      isPanningRef.current = false;
       startPan.current = null;
       lastPinch.current = null;
-      if (Math.hypot(velocity.current.x, velocity.current.y) > 0.002) {
+      isInteracting.current = false;
+      if (Math.hypot(velocity.current.x, velocity.current.y) > 0.002)
         startMomentum();
-      }
-      // sync UI scale now
-      setUiScale(currentScale.current);
     }
   }
 
-  /* ---------- preview sticky-frame pinch opens overlay seeded ---------- */
+  /* ---------- preview pinch -> open overlay seeded ---------- */
   function onPreviewPointerDown(e) {
     try {
       e.target.setPointerCapture?.(e.pointerId);
@@ -471,26 +383,23 @@ export default function ImageAside({
       e.preventDefault?.();
     }
   }
+
   function onPreviewPointerMove(e) {
     if (!pointersPreview.current.has(e.pointerId)) return;
     pointersPreview.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
     if (pointersPreview.current.size === 2 && previewPinchStart.current) {
       const arr = Array.from(pointersPreview.current.values());
       const nowD = distance(arr[0], arr[1]);
       const ratio = nowD / previewPinchStart.current;
+
       if (!open && Math.abs(ratio - 1) > 0.06) {
-        // open overlay AND seed scale+translate for natural feel
         setOpen(true);
-        // choose hi-res if available (preload started earlier)
-        if (hiResSrc && !hiResLoaded) {
-          // let preload finish quickly (hiResLoaded true when done)
-        }
         const initialScale = clamp(
           INITIAL_SCALE * ratio * 1.2,
           MIN_SCALE,
           MAX_SCALE
         );
-        // seed translate toward pinch center
         const centerX = (arr[0].x + arr[1].x) / 2;
         const centerY = (arr[0].y + arr[1].y) / 2;
         const vw = window.innerWidth;
@@ -503,10 +412,9 @@ export default function ImageAside({
           seedTranslate.y,
           initialScale
         );
-        currentScale.current = initialScale;
-        currentTranslate.current = limited;
-        writeTransform();
-        setUiScale(currentScale.current);
+        pendingScale.current = initialScale;
+        pendingTranslate.current = limited;
+        scheduleFlush();
         previewPinchStart.current = null;
         pointersPreview.current.clear();
       } else {
@@ -514,6 +422,7 @@ export default function ImageAside({
       }
     }
   }
+
   function onPreviewPointerUp(e) {
     try {
       e.target.releasePointerCapture?.(e.pointerId);
@@ -524,7 +433,7 @@ export default function ImageAside({
     if (pointersPreview.current.size === 0) previewPinchStart.current = null;
   }
 
-  /* ---------- double-tap toggles around pointer -> we handle transform directly ---------- */
+  /* ---------- double-tap => zoom toggle near pointer ---------- */
   const lastClick = useRef(0);
   function onDoubleClick(e) {
     const now = Date.now();
@@ -533,107 +442,90 @@ export default function ImageAside({
       const clientX = e?.clientX ?? window.innerWidth / 2;
       const clientY = e?.clientY ?? window.innerHeight / 2;
       const targetScale =
-        currentScale.current > INITIAL_SCALE * 1.15
+        scale > INITIAL_SCALE * 1.15
           ? INITIAL_SCALE
-          : clamp(currentScale.current * 2, MIN_SCALE, MAX_SCALE);
-
+          : clamp(scale * 2, MIN_SCALE, MAX_SCALE);
       if (rect) {
-        const cx =
-          clientX - rect.left - rect.width / 2 - currentTranslate.current.x;
-        const cy =
-          clientY - rect.top - rect.height / 2 - currentTranslate.current.y;
-        const ratio = targetScale / currentScale.current;
-        const nx = currentTranslate.current.x - cx * (ratio - 1);
-        const ny = currentTranslate.current.y - cy * (ratio - 1);
+        const cx = clientX - rect.left - rect.width / 2 - translate.x;
+        const cy = clientY - rect.top - rect.height / 2 - translate.y;
+        const ratio = targetScale / scale;
+        const nx = translate.x - cx * (ratio - 1);
+        const ny = translate.y - cy * (ratio - 1);
         const limited = constrainTranslate(nx, ny, targetScale);
-        currentScale.current = targetScale;
-        currentTranslate.current = limited;
-        writeTransform();
-        setUiScale(currentScale.current);
+        pendingScale.current = targetScale;
+        pendingTranslate.current = limited;
+        scheduleFlush();
       } else {
-        currentScale.current = targetScale;
-        writeTransform();
-        setUiScale(currentScale.current);
+        pendingScale.current = targetScale;
+        scheduleFlush();
       }
       lastClick.current = 0;
-    } else {
-      lastClick.current = now;
-    }
+    } else lastClick.current = now;
   }
 
   function preventDrag(e) {
     e.preventDefault();
   }
 
-  /* ---------- Actions ---------- */
+  /* ---------- actions ---------- */
   function onClose() {
     setOpen(false);
-    // reset transform after overlay close (small delay)
-    requestAnimationFrame(() => {
-      currentScale.current = INITIAL_SCALE;
-      currentTranslate.current = { x: 0, y: 0 };
-      setUiScale(INITIAL_SCALE);
-      if (ivImageRef.current)
-        ivImageRef.current.style.transform = `translate(0px,0px) scale(${INITIAL_SCALE})`;
-    });
   }
   function onMinimize() {
-    currentScale.current = INITIAL_SCALE;
-    currentTranslate.current = { x: 0, y: 0 };
-    writeTransform();
-    setUiScale(INITIAL_SCALE);
+    pendingScale.current = INITIAL_SCALE;
+    pendingTranslate.current = { x: 0, y: 0 };
+    scheduleFlush();
     setOpen(false);
   }
   function onZoomMax() {
-    const next = clamp(currentScale.current * 1.5, MIN_SCALE, MAX_SCALE);
-    currentScale.current = next;
-    writeTransform();
-    setUiScale(next);
+    pendingScale.current = clamp(
+      pendingScale.current * 1.5,
+      MIN_SCALE,
+      MAX_SCALE
+    );
+    scheduleFlush();
   }
 
-  /* ---------- slider value derived from current scale (for controlled input) ---------- */
-  const sliderValue = scaleToSlider(uiScale);
-
-  /* ---------- when overlay open: ensure overlay image uses hiResSrc (if loaded) to avoid pixelation.
-       We set src directly on the DOM image to avoid React re-render penalty.
-  ---------- */
+  /* ---------- optional hi-res preloading (avoid pixelation at high zoom) ---------- */
   useEffect(() => {
-    if (!ivImageRef.current) return;
-    const imgEl = ivImageRef.current;
-    const target = hiResSrc && hiResLoaded ? hiResSrc : src;
-    if (imgEl.src !== target) {
-      // swap smoothly: keep current image visible until new is available, then swap
-      const tmp = new Image();
-      tmp.src = target;
-      tmp.onload = () => {
-        imgEl.src = target;
-        imgEl.style.opacity = "1";
-      };
-      tmp.onerror = () => {
-        // fallback keep current
-      };
-    }
-  }, [open, hiResLoaded, hiResSrc, src]);
+    if (!hiResSrc) return;
+    let mounted = true;
+    let rafId = null;
+    const img = new Image();
+    img.onload = () => {
+      if (!mounted) return;
+      rafId = requestAnimationFrame(() => {
+        if (mounted) {
+          /* keep preloaded in browser cache */
+        }
+      });
+    };
+    img.onerror = () => {
+      if (!mounted) {
+        /* empty */
+      }
+    };
+    img.src = hiResSrc;
+    return () => {
+      mounted = false;
+      img.onload = null;
+      img.onerror = null;
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [hiResSrc]);
 
-  /* ---------- write initial transform when overlay opens ---------- */
-  useEffect(() => {
-    if (open) {
-      // make sure UI shows initial scale
-      setUiScale(currentScale.current);
-      // small rAF to ensure DOM available
-      requestAnimationFrame(() => writeTransform());
-    }
-  }, [open, writeTransform]);
-
-  /* ---------- cleanup rafs on unmount ---------- */
+  /* ---------- cleanup rAFs on unmount ---------- */
   useEffect(() => {
     return () => {
-      if (raf.current) cancelAnimationFrame(raf.current);
+      if (rafFlush.current) cancelAnimationFrame(rafFlush.current);
       if (momentumRaf.current) cancelAnimationFrame(momentumRaf.current);
     };
   }, []);
 
-  /* ---------- Render ---------- */
+  /* ---------- render ---------- */
+  // choose actual image src (if hiRes provided and scale large, you might swap; here we always use src for simplicity)
+  const actualSrc = src;
+
   return (
     <>
       <aside className="project-left" aria-label={label}>
@@ -647,7 +539,7 @@ export default function ImageAside({
             ref={previewRef}
             alt={alt}
             className="left-long-image interactive-image"
-            src={src}
+            src={actualSrc}
             onDragStart={preventDrag}
             onPointerDown={onPreviewPointerDown}
             onPointerMove={onPreviewPointerMove}
@@ -662,10 +554,10 @@ export default function ImageAside({
               aria-label="Open preview"
               onClick={() => {
                 setOpen(true);
-                currentScale.current = INITIAL_SCALE;
-                currentTranslate.current = { x: 0, y: 0 };
-                setUiScale(INITIAL_SCALE);
-                // Ensure hiRes preload is used if available (see effect).
+                // seed visible values to avoid jump
+                pendingScale.current = INITIAL_SCALE;
+                pendingTranslate.current = { x: 0, y: 0 };
+                scheduleFlush();
               }}
               type="button"
             />
@@ -673,7 +565,7 @@ export default function ImageAside({
         </div>
       </aside>
 
-      {/* Overlay */}
+      {/* overlay */}
       <div
         className={`iv-overlay ${open ? "open" : ""}`}
         role="dialog"
@@ -715,15 +607,16 @@ export default function ImageAside({
             <div className="iv-title">Preview</div>
 
             <div className="iv-actions">
-              <div className="zoom-display">{Math.round(uiScale * 100)}%</div>
+              <div className="zoom-display">
+                {Math.round((pendingScale.current || scale) * 100)}%
+              </div>
 
               <button
                 className="iv-btn"
                 onClick={() => {
-                  currentScale.current = INITIAL_SCALE;
-                  currentTranslate.current = { x: 0, y: 0 };
-                  writeTransform();
-                  setUiScale(INITIAL_SCALE);
+                  pendingScale.current = INITIAL_SCALE;
+                  pendingTranslate.current = { x: 0, y: 0 };
+                  scheduleFlush();
                 }}
               >
                 Fit
@@ -732,14 +625,12 @@ export default function ImageAside({
               <button
                 className="iv-btn"
                 onClick={() => {
-                  const n = clamp(
-                    currentScale.current * 1.25,
+                  pendingScale.current = clamp(
+                    pendingScale.current * 1.25,
                     MIN_SCALE,
                     MAX_SCALE
                   );
-                  currentScale.current = n;
-                  writeTransform();
-                  setUiScale(n);
+                  scheduleFlush();
                 }}
               >
                 +
@@ -748,30 +639,25 @@ export default function ImageAside({
               <button
                 className="iv-btn"
                 onClick={() => {
-                  const n = clamp(
-                    currentScale.current / 1.25,
+                  pendingScale.current = clamp(
+                    pendingScale.current / 1.25,
                     MIN_SCALE,
                     MAX_SCALE
                   );
-                  currentScale.current = n;
-                  writeTransform();
-                  setUiScale(n);
+                  scheduleFlush();
                 }}
               >
                 −
               </button>
 
-              {/* Slider (log scale) */}
               <div className="zoom-slider">
                 <button
                   className="slide-icon"
                   onClick={() => {
-                    const cur = scaleToSlider(uiScale);
+                    const cur = scaleToSlider(pendingScale.current || scale);
                     const next = Math.max(0, cur - 6);
-                    const s = sliderToScale(next);
-                    currentScale.current = s;
-                    writeTransform();
-                    setUiScale(s);
+                    pendingScale.current = sliderToScale(next);
+                    scheduleFlush();
                   }}
                 >
                   −
@@ -783,25 +669,21 @@ export default function ImageAside({
                   min="0"
                   max="100"
                   step="0.5"
-                  value={sliderValue}
+                  value={scaleToSlider(pendingScale.current || scale)}
                   onChange={(ev) => {
                     const v = Number(ev.target.value);
-                    const s = sliderToScale(v);
-                    currentScale.current = s;
-                    writeTransform();
-                    setUiScale(s);
+                    pendingScale.current = sliderToScale(v);
+                    scheduleFlush();
                   }}
                 />
 
                 <button
                   className="slide-icon"
                   onClick={() => {
-                    const cur = scaleToSlider(uiScale);
+                    const cur = scaleToSlider(pendingScale.current || scale);
                     const next = Math.min(100, cur + 6);
-                    const s = sliderToScale(next);
-                    currentScale.current = s;
-                    writeTransform();
-                    setUiScale(s);
+                    pendingScale.current = sliderToScale(next);
+                    scheduleFlush();
                   }}
                 >
                   +
@@ -810,35 +692,28 @@ export default function ImageAside({
             </div>
           </div>
 
-          <div
-            className="iv-body"
-            style={{
-              background: "#111",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {/* image element used for transformation. Initially src will be preview; effect swaps to hiRes when available */}
+          <div className="iv-body">
             <img
               ref={ivImageRef}
-              src={hiResSrc && hiResLoaded ? hiResSrc : src}
+              src={actualSrc}
               alt={alt}
               draggable={false}
               onDragStart={preventDrag}
-              style={{
-                transition: open
-                  ? "transform 100ms cubic-bezier(.2,.9,.2,1), opacity 180ms linear"
-                  : "none",
-                willChange: "transform, opacity",
-                maxWidth: "100%",
-                maxHeight: "100%",
-                objectFit: "contain",
-                opacity: 1,
-                touchAction: "none",
-                userSelect: "none",
-              }}
               className="iv-image"
+              style={{
+                transform: `translate3d(${
+                  pendingTranslate.current?.x ?? translate.x
+                }px, ${
+                  pendingTranslate.current?.y ?? translate.y
+                }px, 0) scale(${pendingScale.current ?? scale})`,
+                transition: isInteracting.current
+                  ? "none"
+                  : "transform 120ms cubic-bezier(.2,.9,.2,1)",
+                willChange: "transform",
+                maxWidth: "none",
+                maxHeight: "none",
+                imageRendering: "auto",
+              }}
             />
           </div>
 
@@ -852,4 +727,20 @@ export default function ImageAside({
       </div>
     </>
   );
+
+  /* ---------- slider helpers (log scale) ---------- */
+
+  function scaleToSlider(s) {
+    const logMin = Math.log(MIN_SCALE);
+    const logMax = Math.log(MAX_SCALE);
+    const v = (Math.log(s) - logMin) / (logMax - logMin);
+    return v * 100;
+  }
+  function sliderToScale(v) {
+    const logMin = Math.log(MIN_SCALE);
+    const logMax = Math.log(MAX_SCALE);
+    const t = v / 100;
+    const s = Math.exp(logMin + t * (logMax - logMin));
+    return clamp(s, MIN_SCALE, MAX_SCALE);
+  }
 }
