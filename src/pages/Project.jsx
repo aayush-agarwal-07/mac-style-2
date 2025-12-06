@@ -11,7 +11,7 @@ export default function Project() {
   const navigate = useNavigate();
 
   const stickyRef = useRef(null);
-  // const stickyFrameRef = useRef(null);
+  // const imgRef = useRef(null);
 
   // find current project and its index (fallback to first)
   const { project, index } = useMemo(() => {
@@ -111,13 +111,8 @@ export default function Project() {
           src={project.hero}
           alt={`${project.title} visual`}
           label={`${project.title} visuals`}
-          stickyRefCallback={(el) => {
-            stickyRef.current = el;
-          }}
+          stickyRef={stickyRef}
           onScrollPercent={handleScrollPercent}
-          // stickyRef={(node) => {
-          //   stickyFrameRef.current = node;
-          // }}
         />
 
         {/* RIGHT */}
