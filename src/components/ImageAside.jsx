@@ -16,8 +16,8 @@ export default function ImageAside({
   onScrollPercent = null, // callback(percent)
 }) {
   // Zoom: initial 1000% = scale 10
-  const INITIAL_SCALE = 10;
-  const MIN_SCALE = 10; // 10%
+  const INITIAL_SCALE = 1;
+  const MIN_SCALE = 1; // 10%
   const MAX_SCALE = 20; // 3000%
 
   const [open, setOpen] = useState(false);
