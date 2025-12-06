@@ -289,12 +289,12 @@ body::-webkit-scrollbar {
 }
 
 .maximize-parent {
-  width: 38.5%;
+  width: 40.5%;
   background: #fff;
   height: 2vw;
   position: fixed;
-  left: 14%;
-  top: 24.2%;
+  left: 13%;
+  top: 17.2%;
   z-index: 1200;
 }
 
@@ -303,7 +303,7 @@ body::-webkit-scrollbar {
   height: 10vw;
   position: fixed;
   left: 51%;
-  top: 25%;
+  top: 17.2%;
   z-index: 1200;
   background: rgba(0, 0, 0, 0.95);
   border: 1px solid rgba(0, 0, 0, 0.06);
