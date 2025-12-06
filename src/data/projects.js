@@ -22,7 +22,7 @@ const projects = [
   {
     slug: "second",
     title: "Second",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/dash-dog.png",
     sections: [
       {
         id: "overview",
@@ -48,7 +48,7 @@ const projects = [
   {
     slug: "third",
     title: "Third",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/serum_and_conditioner.jpg",
     sections: [
       {
         id: "overview",
@@ -71,7 +71,7 @@ const projects = [
   {
     slug: "fourth",
     title: "Fourth",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/ai_work.jpg",
     sections: [
       {
         id: "overview",
