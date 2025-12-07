@@ -27,6 +27,9 @@ export default function ImageAside({
   const [isPanning, setIsPanning] = useState(false);
   const startPan = useRef(null);
 
+  const isZoomingRef = useRef(false);
+  const zoomTimeoutRef = useRef(null);
+
   const viewerRef = useRef(null);
   const ivImageRef = useRef(null);
   const previewRef = useRef(null);
@@ -185,17 +188,23 @@ export default function ImageAside({
     if (!open) return;
     e.preventDefault();
 
+    // Mark as zooming
+    isZoomingRef.current = true;
+
     // delta direction (positive: zoom in)
     const delta = -e.deltaY || 0;
 
-    // exponential factor: smaller denominator -> faster jumps
-    // tuned for smooth navigation across large ranges
-    const zoomExp = Math.exp(delta / 300); // tune divisor (300) to taste
+    // Use a more responsive exponential zoom
+    const zoomExp = Math.exp(delta / 500); // Increased from 300 to 500 for smoother zoom
     const next = clamp(scale * zoomExp, MIN_SCALE, MAX_SCALE);
 
     const rect = viewerRef.current?.getBoundingClientRect();
     if (!rect) {
       setScale(next);
+      // Reset zooming flag after animation
+      setTimeout(() => {
+        isZoomingRef.current = false;
+      }, 100);
       return;
     }
 
@@ -207,8 +216,20 @@ export default function ImageAside({
     const ny = translate.y - cy * (ratio - 1);
 
     const limited = constrainTranslate(nx, ny, next);
+
+    // Single state update for both scale and translate
     setScale(next);
     setTranslate(limited);
+
+    // Clear any existing timeout
+    if (zoomTimeoutRef.current) {
+      clearTimeout(zoomTimeoutRef.current);
+    }
+
+    // Reset zooming flag after animation completes
+    zoomTimeoutRef.current = setTimeout(() => {
+      isZoomingRef.current = false;
+    }, 100);
   }
 
   /* ---------- Overlay pointer handlers (pan + pinch) ---------- */
@@ -259,6 +280,9 @@ export default function ImageAside({
       velocity.current = { x: vx, y: vy };
       lastMove.current = { t: now, x: e.clientX, y: e.clientY };
     } else if (pointers.current.size === 2) {
+      // Mark as zooming during pinch
+      isZoomingRef.current = true;
+
       const arr = Array.from(pointers.current.values());
       const d = distance(arr[0], arr[1]);
       if (lastPinch.current && Math.abs(d - lastPinch.current) > 2) {
@@ -281,9 +305,14 @@ export default function ImageAside({
         const ny = translate.y - centerY * (ratio2 - 1);
 
         const limited = constrainTranslate(nx, ny, nextScale);
+
+        // Single state update for both
         setScale(nextScale);
         setTranslate(limited);
         lastPinch.current = d;
+
+        // Reset zooming flag
+        isZoomingRef.current = false;
       }
     }
   }
@@ -338,6 +367,10 @@ export default function ImageAside({
       setIsPanning(false);
       startPan.current = null;
       lastPinch.current = null;
+
+      // Reset zooming flag
+      isZoomingRef.current = false;
+
       if (Math.hypot(velocity.current.x, velocity.current.y) > 0.002) {
         startMomentum();
       }
@@ -488,9 +521,11 @@ export default function ImageAside({
   const sliderValue = scaleToSlider(scale);
 
   /* ---------- Cleanup RAFs on unmount ---------- */
+  /* ---------- Cleanup RAFs and timeouts on unmount ---------- */
   useEffect(() => {
     return () => {
       if (momentumRaf.current) cancelAnimationFrame(momentumRaf.current);
+      if (zoomTimeoutRef.current) clearTimeout(zoomTimeoutRef.current);
     };
   }, []);
 
@@ -653,11 +688,12 @@ export default function ImageAside({
               draggable={false}
               onDragStart={preventDrag}
               style={{
-                transform: `translate3d(${translate.x}px, ${translate.y}px, 0) scale(${scale})`, // Changed to translate3d for hardware acceleration
+                transform: `translate3d(${translate.x}px, ${translate.y}px, 0) scale(${scale})`,
                 touchAction: "none",
-                transition: isPanning || momentumRaf.current
-                  ? "none"
-                  : "transform 100ms ease-out", // Simpler easing for less jitter
+                transition:
+                  isPanning || momentumRaf.current || isZoomingRef.current
+                    ? "none"
+                    : "transform 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94)", // Smoother cubic-bezier
                 willChange: "transform",
                 maxWidth: "100%",
                 maxHeight: "100%",
