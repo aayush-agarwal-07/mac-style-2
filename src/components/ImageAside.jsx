@@ -42,6 +42,10 @@ export default function ImageAside({
   const velocity = useRef({ x: 0, y: 0 });
   const momentumRaf = useRef(null);
 
+  // RAF batching for smoother updates
+  const rafId = useRef(null);
+  const wheelTimeout = useRef(null);
+
   /* ---------- helpers ---------- */
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -185,30 +189,39 @@ export default function ImageAside({
     if (!open) return;
     e.preventDefault();
 
-    // delta direction (positive: zoom in)
-    const delta = -e.deltaY || 0;
-
-    // exponential factor: smaller denominator -> faster jumps
-    // tuned for smooth navigation across large ranges
-    const zoomExp = Math.exp(delta / 300); // tune divisor (300) to taste
-    const next = clamp(scale * zoomExp, MIN_SCALE, MAX_SCALE);
-
-    const rect = viewerRef.current?.getBoundingClientRect();
-    if (!rect) {
-      setScale(next);
-      return;
+    // Clear any pending wheel update
+    if (wheelTimeout.current) {
+      cancelAnimationFrame(wheelTimeout.current);
     }
 
-    // zoom towards pointer
-    const cx = e.clientX - rect.left - rect.width / 2 - translate.x;
-    const cy = e.clientY - rect.top - rect.height / 2 - translate.y;
-    const ratio = next / scale;
-    const nx = translate.x - cx * (ratio - 1);
-    const ny = translate.y - cy * (ratio - 1);
+    wheelTimeout.current = requestAnimationFrame(() => {
+      const delta = -e.deltaY || 0;
 
-    const limited = constrainTranslate(nx, ny, next);
-    setScale(next);
-    setTranslate(limited);
+      // exponential factor: smaller denominator -> faster jumps
+      // tuned for smooth navigation across large ranges
+      const zoomExp = Math.exp(delta / 500); // Slower zoom (500 instead of 300) for less jitter
+      const next = clamp(scale * zoomExp, MIN_SCALE, MAX_SCALE);
+
+      const rect = viewerRef.current?.getBoundingClientRect();
+      if (!rect) {
+        setScale(next);
+        wheelTimeout.current = null;
+        return;
+      }
+
+      // zoom towards pointer
+      const cx = e.clientX - rect.left - rect.width / 2 - translate.x;
+      const cy = e.clientY - rect.top - rect.height / 2 - translate.y;
+      const ratio = next / scale;
+      const nx = translate.x - cx * (ratio - 1);
+      const ny = translate.y - cy * (ratio - 1);
+
+      const limited = constrainTranslate(nx, ny, next);
+      setScale(next);
+      setTranslate(limited);
+
+      wheelTimeout.current = null;
+    });
   }
 
   /* ---------- Overlay pointer handlers (pan + pinch) ---------- */
@@ -246,18 +259,28 @@ export default function ImageAside({
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
     if (pointers.current.size === 1 && isPanning && startPan.current) {
-      // pan by pointer delta (smoother than re-calculating absolute sometimes)
-      const nx = e.clientX - startPan.current.x;
-      const ny = e.clientY - startPan.current.y;
-      const limited = constrainTranslate(nx, ny, scale);
-      setTranslate(limited);
+      // Cancel any pending RAF
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
+        rafId.current = null;
+      }
 
-      const now = performance.now();
-      const dt = Math.max(1, now - lastMove.current.t);
-      const vx = (e.clientX - lastMove.current.x) / dt;
-      const vy = (e.clientY - lastMove.current.y) / dt;
-      velocity.current = { x: vx, y: vy };
-      lastMove.current = { t: now, x: e.clientX, y: e.clientY };
+      // Batch the update for smoother panning
+      rafId.current = requestAnimationFrame(() => {
+        const nx = e.clientX - startPan.current.x;
+        const ny = e.clientY - startPan.current.y;
+        const limited = constrainTranslate(nx, ny, scale);
+        setTranslate(limited);
+
+        const now = performance.now();
+        const dt = Math.max(1, now - lastMove.current.t);
+        const vx = (e.clientX - lastMove.current.x) / dt;
+        const vy = (e.clientY - lastMove.current.y) / dt;
+        velocity.current = { x: vx, y: vy };
+        lastMove.current = { t: now, x: e.clientX, y: e.clientY };
+
+        rafId.current = null;
+      });
     } else if (pointers.current.size === 2) {
       const arr = Array.from(pointers.current.values());
       const d = distance(arr[0], arr[1]);
@@ -289,10 +312,14 @@ export default function ImageAside({
   }
 
   function startMomentum() {
-    const friction = 0.95;
+    const friction = 0.94; // Slightly higher friction for less jitter
     const minV = 0.001;
     let vx = velocity.current.x;
     let vy = velocity.current.y;
+
+    // Store initial values for distance check
+    const startX = translate.x;
+    const startY = translate.y;
 
     function step() {
       const dt = 16;
@@ -302,15 +329,23 @@ export default function ImageAside({
       const nextTy = translate.y + dy;
       const limited = constrainTranslate(nextTx, nextTy, scale);
 
-      if (limited.x !== nextTx) vx *= 0.6;
-      if (limited.y !== nextTy) vy *= 0.6;
+      // Bounce when hitting boundaries
+      if (limited.x !== nextTx) vx *= 0.5; // Stronger bounce
+      if (limited.y !== nextTy) vy *= 0.5;
 
       setTranslate(limited);
 
       vx *= friction;
       vy *= friction;
 
-      if (Math.hypot(vx, vy) < minV) {
+      // Check if we should stop
+      const distTraveled = Math.hypot(
+        translate.x - startX,
+        translate.y - startY
+      );
+      const shouldStop = Math.hypot(vx, vy) < minV || distTraveled < 0.5;
+
+      if (shouldStop) {
         momentumRaf.current = null;
         velocity.current = { x: 0, y: 0 };
         return;
@@ -320,7 +355,10 @@ export default function ImageAside({
       momentumRaf.current = requestAnimationFrame(step);
     }
 
-    if (Math.hypot(vx, vy) > 0.002) {
+    // Only start if there's significant velocity
+    const speed = Math.hypot(velocity.current.x, velocity.current.y);
+    if (speed > 0.1) {
+      // Higher threshold
       momentumRaf.current = requestAnimationFrame(step);
     } else {
       velocity.current = { x: 0, y: 0 };
@@ -487,6 +525,15 @@ export default function ImageAside({
   // slider value derived from scale
   const sliderValue = scaleToSlider(scale);
 
+  /* ---------- Cleanup RAFs on unmount ---------- */
+  useEffect(() => {
+    return () => {
+      if (momentumRaf.current) cancelAnimationFrame(momentumRaf.current);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+      if (wheelTimeout.current) cancelAnimationFrame(wheelTimeout.current);
+    };
+  }, []);
+
   /* ---------- Render ---------- */
   return (
     <>
@@ -648,12 +695,14 @@ export default function ImageAside({
               style={{
                 transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
                 touchAction: "none",
-                transition: open
-                  ? "transform 100ms cubic-bezier(.2,.9,.2,1)"
-                  : "none",
+                transition:
+                  isPanning || momentumRaf.current
+                    ? "none"
+                    : "transform 120ms cubic-bezier(0.2, 0, 0.2, 1)", // Smoother easing
                 willChange: "transform",
                 maxWidth: "100%",
                 maxHeight: "100%",
+                imageRendering: isPanning ? "pixelated" : "auto", // Prevent blur during interaction
               }}
               className="iv-image"
             />
