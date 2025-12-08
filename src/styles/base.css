@@ -301,9 +301,9 @@ body::-webkit-scrollbar {
 .maximize-btn {
   width: 10vw;
   height: 10vw;
-  position: fixed;
-  left: 51%;
-  top: 17.2%;
+  position: absolute;
+  top: 1%;
+  left: 90%;
   z-index: 1200;
   background: rgba(0, 0, 0, 0.95);
   border: 1px solid rgba(0, 0, 0, 0.06);
