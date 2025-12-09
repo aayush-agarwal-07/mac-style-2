@@ -289,21 +289,21 @@ body::-webkit-scrollbar {
 }
 
 .maximize-parent {
-  width: 40.5%;
+  width: 38.5%;
   background: #fff;
   height: 2vw;
   position: fixed;
-  left: 13%;
-  top: 16.5%;
+  left: 14%;
+  top: 24.2%;
   z-index: 1200;
 }
 
 .maximize-btn {
   width: 10vw;
   height: 10vw;
-  position: absolute;
-  top: 1%;
-  left: 90%;
+  position: fixed;
+  left: 51%;
+  top: 25%;
   z-index: 1200;
   background: rgba(0, 0, 0, 0.95);
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -516,7 +516,7 @@ body::-webkit-scrollbar {
     width: 4vw;
     height: 4vw;
     left: 39.5vh;
-    top: 13vh;
+    top: 11.9vh;
   }
   .iv-window {
     width: 96vw;

@@ -111,11 +111,7 @@ export default function Project() {
           src={project.hero}
           alt={`${project.title} visual`}
           label={`${project.title} visuals`}
-          // Option 1: Pass a callback function instead of a ref
-          onStickyUpdate={(element) => {
-            // Update your stickyRef here if needed
-            stickyRef.current = element;
-          }}
+          stickyRef={stickyRef}
           onScrollPercent={handleScrollPercent}
         />
 

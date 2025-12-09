@@ -15,7 +15,6 @@
   flex-direction: column;
   gap: 12px;
   width: 60%;
-  position: relative;
 }
 
 .project-heading {
