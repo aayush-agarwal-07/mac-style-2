@@ -310,6 +310,15 @@ body::-webkit-scrollbar {
   background: rgba(0, 0, 0, 0.95);
   border: 1px solid rgba(0, 0, 0, 0.06);
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.maximize-btn img,
+.mac-close img {
+  width: 1vw;
+  height: 1vw;
 }
 
 /* overlay backdrop */
@@ -373,6 +382,9 @@ body::-webkit-scrollbar {
 }
 .mac-close {
   background: #ff5f56;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .mac-min {
   background: #ffbd2e;
@@ -506,19 +518,31 @@ body::-webkit-scrollbar {
     -ms-touch-action: unset !important;
   }
   .maximize-parent {
-    width: 81.7%;
+    width: 100%;
     height: 6vw;
-    left: 4.3vh;
-    top: 11.4vh;
+    left: 0;
+    top: 0;
     border-top-left-radius: 4vw;
     border-top-right-radius: 4vw;
   }
   .maximize-btn {
-    position: fixed;
+    position: absolute;
     width: 4vw;
     height: 4vw;
-    left: 39.5vh;
-    top: 11.9vh;
+    left: 92%;
+    top: 18%;
+  }
+  .mac {
+    width: 4vw;
+    height: 4vw;
+  }
+  .iv-topbar {
+    gap: 1.375rem;
+  }
+  .maximize-btn img,
+  .mac-close img {
+    width: 2.5vw;
+    height: 2.5vw;
   }
   .iv-window {
     width: 96vw;

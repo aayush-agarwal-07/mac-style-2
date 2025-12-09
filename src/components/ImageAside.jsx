@@ -501,14 +501,14 @@ export default function ImageAside({
   function onClose() {
     setOpen(false);
   }
-  function onMinimize() {
-    setScale(INITIAL_SCALE);
-    setTranslate({ x: 0, y: 0 });
-    setOpen(false);
-  }
-  function onZoomMax() {
-    setScale((s) => clamp(s * 1.5, MIN_SCALE, MAX_SCALE));
-  }
+  // function onMinimize() {
+  //   setScale(INITIAL_SCALE);
+  //   setTranslate({ x: 0, y: 0 });
+  //   setOpen(false);
+  // }
+  // function onZoomMax() {
+  //   setScale((s) => clamp(s * 1.5, MIN_SCALE, MAX_SCALE));
+  // }
 
   /* ---------- UI helpers: slider (log scale) ---------- */
   const logMin = useMemo(() => Math.log(MIN_SCALE), []);
@@ -549,7 +549,9 @@ export default function ImageAside({
               setTranslate({ x: 0, y: 0 });
               //    type="button"
             }}
-          ></button>
+          >
+            <img src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/Maximize.svg" />
+          </button>
         </div>
         <div
           className="sticky-frame"
@@ -597,8 +599,10 @@ export default function ImageAside({
                 aria-label="close"
                 className="mac mac-close"
                 onClick={onClose}
-              />
-              <button
+              >
+                <img src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/Cross.svg"></img>
+              </button>
+              {/* <button
                 aria-label="minimize"
                 className="mac mac-min"
                 onClick={onMinimize}
@@ -607,7 +611,7 @@ export default function ImageAside({
                 aria-label="zoom"
                 className="mac mac-zoom"
                 onClick={onZoomMax}
-              />
+              /> */}
             </div>
 
             <div className="iv-title">Preview</div>
