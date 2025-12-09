@@ -617,7 +617,7 @@ export default function ImageAside({
             <div className="iv-title">Preview</div>
 
             <div className="iv-actions">
-              <div className="zoom-display">{Math.round(scale * 100)}%</div>
+              <div className="zoom-display">{Math.round(scale * 10)}%</div>
 
               <button
                 className="iv-btn"
