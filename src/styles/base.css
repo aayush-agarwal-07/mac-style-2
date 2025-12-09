@@ -522,8 +522,8 @@ body::-webkit-scrollbar {
     height: 6vw;
     left: 0;
     top: 0;
-    border-top-left-radius: 4vw;
-    border-top-right-radius: 4vw;
+    border-top-left-radius: 3vw;
+    border-top-right-radius: 3vw;
   }
   .maximize-btn {
     position: absolute;
