@@ -537,6 +537,20 @@ export default function ImageAside({
   return (
     <>
       <aside className="project-left" aria-label={label}>
+        <div className="maximize-parent">
+          <button
+            className="mac-maximize maximize-btn"
+            title="Open preview"
+            aria-label="Open preview"
+            onClick={() => {
+              setOpen(true);
+              // ensure initial zoom/focus when opened manually
+              setScale(INITIAL_SCALE);
+              setTranslate({ x: 0, y: 0 });
+              //    type="button"
+            }}
+          ></button>
+        </div>
         <div
           className="sticky-frame"
           ref={stickyFrameRef}
@@ -554,20 +568,6 @@ export default function ImageAside({
             onPointerUp={onPreviewPointerUp}
             onPointerCancel={onPreviewPointerUp}
           />
-          <div className="maximize-parent">
-            <button
-              className="mac-maximize maximize-btn"
-              title="Open preview"
-              aria-label="Open preview"
-              onClick={() => {
-                setOpen(true);
-                // ensure initial zoom/focus when opened manually
-                setScale(INITIAL_SCALE);
-                setTranslate({ x: 0, y: 0 });
-                //    type="button"
-              }}
-            ></button>
-          </div>
         </div>
       </aside>
 
