@@ -544,12 +544,16 @@ body::-webkit-scrollbar {
     width: 2.5vw;
     height: 2.5vw;
   }
+  .zoom-slider {
+    display: none;
+  }
   .iv-window {
     width: 96vw;
     border-radius: 14px;
   }
   .iv-topbar {
     padding: 0.9rem;
+    justify-content: center;
   }
   .iv-body {
     padding: 0.8rem;
