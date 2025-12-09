@@ -296,8 +296,8 @@ body::-webkit-scrollbar {
   left: 0;
   top: 0;
   z-index: 1200;
-  border-top-left-radius: 1vw;
-  border-top-right-radius: 1vw;
+  border-top-left-radius: 0.5vw;
+  border-top-right-radius: 0.5vw;
 }
 
 .maximize-btn {
