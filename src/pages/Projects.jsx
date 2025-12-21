@@ -5,14 +5,13 @@ import FolderCard from "../components/FolderCard";
 import Header from "./Header";
 
 const CATS = [
-  "First",
-  "Second",
-  "Third",
-  "Fourth",
-  "Fifth",
-  "Sixth",
-  "Seventh",
-  "Eighth",
+  "Arata",
+  "Sara",
+  "DashDog",
+  "AiWork",
+  "Campaigns",
+  "SuperRange",
+  "BAU",
 ];
 
 export default function Projects() {

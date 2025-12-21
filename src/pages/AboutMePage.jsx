@@ -13,7 +13,7 @@ export default function AboutMePage() {
             <div className="about-card__meta">
               <img
                 className="about-avatar"
-                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/about-me-profile.jpeg"
+                src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/kunal-rastogi.jpeg"
                 alt="profile"
               />
             </div>
@@ -22,48 +22,55 @@ export default function AboutMePage() {
               <h1 className="about-name">Kunal Rastogi</h1>
 
               <p className="about-desc">
-                Highly skilled and accomplished Senior Visual Designer with a
-                passion for creating exceptional brand experiences. With +6
-                years of experience in the (D2C) industry and a successful
-                freelance career working with diverse brands, I bring a unique
-                blend of creativity, leadership, and expertise to every project.
-                Known for mentoring and guiding teams to achieve their full
-                potential, I am now seeking a challenging role as a Design
-                Manager to contribute to the success of an organization.
+                Highly skilled Senior Visual Designer and Design Lead with 6+
+                years of experience building scalable, high-impact brand systems
+                across the D2C ecosystem. I specialise in translating brand
+                strategy into compelling visual narratives across campaigns,
+                websites, marketplaces, and product launches. With a strong
+                foundation in art direction, digital design, and performance-led
+                creatives, I’ve led cross-functional collaborations with growth,
+                product, and marketing teams to deliver cohesive brand
+                experiences at scale. My work spans web design, campaigns,
+                motion graphics, packaging, and marketplace ecosystems, with a
+                sharp focus on both aesthetics and business outcomes. Known for
+                mentoring designers, elevating team output, and setting strong
+                visual direction, I am now focused on growing into a Design
+                Manager role where I can drive creative vision, systems, and
+                people development to build enduring brands.
               </p>
             </div>
           </div>
           <div className="about-skills">
             <article className="skill-card">
               <h4>Art Direction</h4>
-              <p>Highly skilled and accomplished Senior Visual Designer.</p>
+              <p>Shaping visual narratives across campaigns, shoots, and launches with clarity, taste, and consistency.</p>
             </article>
 
             <article className="skill-card">
               <h4>Web Design</h4>
-              <p>Highly skilled and accomplished Senior Visual Designer.</p>
+              <p>Designing high-impact web experiences that balance brand, usability, and conversion.</p>
             </article>
 
             <article className="skill-card">
               <h4>Campaigns</h4>
-              <p>Highly skilled and accomplished Senior Visual Designer.</p>
+              <p>Concept-driven campaigns built to scale across platforms and perform.</p>
             </article>
 
             <article className="skill-card">
               <h4>Branding</h4>
-              <p>Highly skilled and accomplished Senior Visual Designer.</p>
+              <p>Building flexible brand systems that stay consistent while evolving with growth.</p>
             </article>
           </div>
           <BrandsMarquee />
         </div>
         <div className="about-handles">
-          <a href="">
+          <a href="https://www.linkedin.com/in/kunal-rastogi-05495b188/">
             <img
               src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/linkedin.svg"
               alt="Bann Studio"
             />
           </a>
-          <a href="">
+          <a href="https://drive.google.com/file/d/1K6weZQE5Z6metrIMhP-7Kg1m8x1wEPrR/view">
             <img
               src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/resume.svg"
               alt="Arata"

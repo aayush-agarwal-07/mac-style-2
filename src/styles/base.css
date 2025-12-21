@@ -278,6 +278,98 @@ body::-webkit-scrollbar {
   }
 }
 
+/* -------------------------
+   Initial state (clean & tight)
+   ------------------------- */
+
+.project-container:not(.page-loaded) .site-header,
+.project-container:not(.page-loaded) .project-nav,
+.project-container:not(.page-loaded) .project-right,
+.project-container:not(.page-loaded) .project-title,
+.project-container:not(.page-loaded) .doc-section,
+.project-container:not(.page-loaded) .dynamic-info-panel {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* -------------------------
+   Load animations (layered)
+   ------------------------- */
+
+.page-loaded .site-header {
+  animation: enterSoft 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.page-loaded .project-nav {
+  animation: enterSoft 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.08s;
+}
+
+/* Title = authority → stronger easing */
+.page-loaded .project-title {
+  animation: enterStrong 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.18s;
+}
+
+/* Content sections feel lighter */
+.page-loaded .doc-section {
+  animation: enterSoft 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.page-loaded .doc-section:nth-child(1) {
+  animation-delay: 0.28s;
+}
+.page-loaded .doc-section:nth-child(2) {
+  animation-delay: 0.36s;
+}
+.page-loaded .doc-section:nth-child(3) {
+  animation-delay: 0.44s;
+}
+.page-loaded .doc-section:nth-child(4) {
+  animation-delay: 0.52s;
+}
+
+/* Info panel comes last */
+.page-loaded .dynamic-info-panel {
+  animation: enterFade 0.45s ease-out forwards;
+  animation-delay: 0.7s;
+}
+
+/* -------------------------
+   Keyframes (this is the sauce)
+   ------------------------- */
+
+@keyframes enterSoft {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes enterStrong {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes enterFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* ensure preview and overlay don't feed gestures to the browser */
 .interactive-image,
 .iv-overlay,
@@ -289,15 +381,15 @@ body::-webkit-scrollbar {
 }
 
 .maximize-parent {
-  width: 100%;
+  width: 102.3%;
   background: #fff;
   height: 2vw;
   position: absolute;
-  left: 0;
+  left: -1.3%;
   top: 0;
   z-index: 1200;
-  border-top-left-radius: 0.5vw;
-  border-top-right-radius: 0.5vw;
+  border-top-left-radius: 0vw;
+  border-top-right-radius: 0vw;
 }
 
 .maximize-btn {

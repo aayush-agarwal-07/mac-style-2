@@ -1,8 +1,8 @@
 const projects = [
   {
-    slug: "first",
-    title: "First",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
+    slug: "arata",
+    title: "Arata",
+    hero: "",
     sections: [
       {
         id: "intro",
@@ -11,6 +11,7 @@ const projects = [
       },
     ],
     infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
       { percent: 5, text: "Intro — Establishing baseline grid and canvas" },
       { percent: 22, text: "Composition — Testing column widths and gutters" },
       { percent: 47, text: "Typography — Scale tests and line-length checks" },
@@ -20,9 +21,9 @@ const projects = [
   },
 
   {
-    slug: "second",
-    title: "Second",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/dash-dog.png",
+    slug: "sara",
+    title: "Sara",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
     sections: [
       {
         id: "overview",
@@ -31,6 +32,7 @@ const projects = [
       },
     ],
     infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
       { percent: 8, text: "Kickoff — Goals and constraints for grid behavior" },
       { percent: 30, text: "Breakpoints — Adaptive rules for small screens" },
       { percent: 55, text: "Modules — Reusable blocks and composition swaps" },
@@ -46,9 +48,9 @@ const projects = [
   },
 
   {
-    slug: "third",
-    title: "Third",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/serum_and_conditioner.jpg",
+    slug: "dashdog",
+    title: "Dash Dog",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/dash-dog.png",
     sections: [
       {
         id: "overview",
@@ -57,6 +59,7 @@ const projects = [
       },
     ],
     infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
       {
         percent: 3,
         text: "Micro-interactions — defining small motion vocabulary",
@@ -69,9 +72,9 @@ const projects = [
   },
 
   {
-    slug: "fourth",
-    title: "Fourth",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/ai_work.jpg",
+    slug: "aiwork",
+    title: "AI Work",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/ai-work-new-2.jpg",
     sections: [
       {
         id: "overview",
@@ -80,6 +83,7 @@ const projects = [
       },
     ],
     infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
       { percent: 2, text: "Cards — baseline spacing and aspect ratio rules" },
       { percent: 25, text: "Variants — title-first vs. image-first layouts" },
       { percent: 49, text: "Density — compact vs. comfortable card spacing" },
@@ -92,9 +96,9 @@ const projects = [
   },
 
   {
-    slug: "fifth",
-    title: "Fifth",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
+    slug: "superrange",
+    title: "Super Range",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/serum-and-conditioner-new-2.jpg",
     sections: [
       {
         id: "goal",
@@ -103,6 +107,7 @@ const projects = [
       },
     ],
     infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
       { percent: 6, text: "Narrative — defining pacing and entry points" },
       { percent: 35, text: "Typography — expressive headings and rhythm" },
       { percent: 58, text: "Anchors — aligning visuals to narrative beats" },
@@ -112,49 +117,9 @@ const projects = [
   },
 
   {
-    slug: "sixth",
-    title: "Sixth",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
-    sections: [
-      {
-        id: "intro",
-        title: "",
-        text: "The Sixth project focuses on image-heavy layouts, ensuring the visuals guide the emotional direction of the page.",
-      },
-    ],
-    infoPoints: [
-      { percent: 10, text: "Hero — image treatments and aspect handling" },
-      { percent: 34, text: "Crop — focal-point preservation on resize" },
-      { percent: 57, text: "Lazy load — prioritized asset loading strategy" },
-      { percent: 76, text: "Contrast — legibility over images and overlays" },
-      { percent: 95, text: "Export — optimized image sizes and formats" },
-    ],
-  },
-
-  {
-    slug: "seventh",
-    title: "Seventh",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
-    sections: [
-      {
-        id: "overview",
-        title: "",
-        text: "The Seventh project experimented with dark–light contrast and depth layering using shadows and highlights.",
-      },
-    ],
-    infoPoints: [
-      { percent: 5, text: "Contrast — baseline dark/light token decisions" },
-      { percent: 29, text: "Elevation — subtle shadow scale and opacity" },
-      { percent: 52, text: "Layering — z-index patterns and clipping" },
-      { percent: 74, text: "Highlights — small specular touches and glows" },
-      { percent: 97, text: "Polish — final color balance and tone mapping" },
-    ],
-  },
-
-  {
-    slug: "eighth",
-    title: "Eighth",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
+    slug: "campaigns",
+    title: "Campaigns",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/serum_and_conditioner.jpg",
     sections: [
       {
         id: "overview",
@@ -163,6 +128,7 @@ const projects = [
       },
     ],
     infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
       {
         percent: 7,
         text: "Synthesis — combining prior patterns into a single system",
@@ -174,6 +140,27 @@ const projects = [
       },
       { percent: 84, text: "Testing — cross-device and accessibility sweep" },
       { percent: 99, text: "Ship — final build checklist and handoff notes" },
+    ],
+  },
+
+  {
+    slug: "bau",
+    title: "BAU",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/serum_and_conditioner.jpg",
+    sections: [
+      {
+        id: "overview",
+        title: "",
+        text: "The Seventh project experimented with dark–light contrast and depth layering using shadows and highlights.",
+      },
+    ],
+    infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
+      { percent: 5, text: "Contrast — baseline dark/light token decisions" },
+      { percent: 29, text: "Elevation — subtle shadow scale and opacity" },
+      { percent: 52, text: "Layering — z-index patterns and clipping" },
+      { percent: 74, text: "Highlights — small specular touches and glows" },
+      { percent: 97, text: "Polish — final color balance and tone mapping" },
     ],
   },
 ];

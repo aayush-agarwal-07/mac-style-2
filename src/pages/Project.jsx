@@ -30,6 +30,13 @@ export default function Project() {
   /* -------------------------
      Reveal intersection observer
      ------------------------- */
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoaded(true), 60);
+    return () => clearTimeout(t);
+  }, []);
+
   useEffect(() => {
     const els = Array.from(document.querySelectorAll(".doc-section"));
     if (!els.length || typeof IntersectionObserver === "undefined") {
@@ -91,7 +98,11 @@ export default function Project() {
           </Link>
         </nav>
       </header>
-      <main className="project-container" aria-live="polite">
+      <main
+        className={`project-container ${isLoaded ? "page-loaded" : ""}`}
+        aria-live="polite"
+      >
+        <div class="universal-line"></div>
         {/* Prev nav (uses functions to avoid ref issues) */}
         <nav className="project-nav" aria-label="Project navigation">
           {prev && (

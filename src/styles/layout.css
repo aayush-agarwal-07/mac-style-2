@@ -129,9 +129,29 @@ button:focus {
   }
 }
 
+.universal-line {
+  position: absolute;
+  width: 8vw;
+  height: 1px;
+  background: #d4d4d4;
+  top: 28.5vw;
+  left: 48vw;
+  z-index: 2;
+}
+
 @media (max-width: 720px) {
   .project-container {
     grid-template-columns: 1fr;
+  }
+  .universal-line {
+    display: none;
+    position: absolute;
+    width: 8vw;
+    height: 1px;
+    background: #777;
+    top: 28.5vw;
+    left: 48vw;
+    z-index: 2;
   }
   .project-left {
     order: -1;
@@ -524,7 +544,7 @@ button:focus {
 }
 .about-avatar {
   width: 11vw;
-  height: 11vw;
+  height: 16vw;
   border-radius: 1vw;
   object-fit: cover;
   display: block;
