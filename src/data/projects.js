@@ -28,7 +28,7 @@ const projects = [
       {
         id: "overview",
         title: "",
-        text: "The Second project focuses on refining composition techniques and experimenting with grid flexibility. The goal was to explore adaptive layout behaviors.",
+        text: "A comprehensive brand and packaging project for Sara’s Wholesome Food, focused on creating a warm, trustworthy, and nutrition-forward identity for pet food. The project involved developing a cohesive visual system across packaging, digital assets, and communication touchpoints, balancing ingredient transparency with approachability. The design language uses earthy tones, bold color coding, and clear hierarchy to simplify product selection while reinforcing freshness, quality, and care. The outcome is a scalable brand system that feels wholesome, premium, and emotionally reassuring for pet parents.",
       },
     ],
     infoPoints: [
