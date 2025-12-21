@@ -102,7 +102,7 @@ export default function Project() {
         className={`project-container ${isLoaded ? "page-loaded" : ""}`}
         aria-live="polite"
       >
-        <div class="universal-line"></div>
+        {/* <div class="universal-line"></div> */}
         {/* Prev nav (uses functions to avoid ref issues) */}
         <nav className="project-nav" aria-label="Project navigation">
           {prev && (
