@@ -381,11 +381,11 @@ body::-webkit-scrollbar {
 }
 
 .maximize-parent {
-  width: 102.3%;
+  width: 100%;
   background: #fff;
   height: 2vw;
   position: absolute;
-  left: -1.3%;
+  left: 0%;
   top: 0;
   z-index: 1200;
   border-top-left-radius: 0vw;
