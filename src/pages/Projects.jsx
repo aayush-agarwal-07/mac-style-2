@@ -11,7 +11,7 @@ const CATS = [
   "AiWork",
   "Campaigns",
   "SuperRange",
-  "BAU",
+
 ];
 
 export default function Projects() {

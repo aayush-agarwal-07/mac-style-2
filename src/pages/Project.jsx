@@ -155,7 +155,12 @@ export default function Project() {
           </div>
 
           {/* Dynamic info panel */}
-          <div className="dynamic-info-panel" role="status" aria-live="polite">
+          <div
+            className="dynamic-info-panel"
+            role="status"
+            aria-live="polite"
+            style={{ display: "none" }}
+          >
             {activeInfo ? (
               <>
                 <div className="info-text">{activeInfo.text}</div>
