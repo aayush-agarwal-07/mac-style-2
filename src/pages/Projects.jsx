@@ -10,8 +10,7 @@ const CATS = [
   "DashDog",
   "AiWork",
   "Campaigns",
-  "SuperRange",
-  "BAU",
+  "SuperRange"
 ];
 
 export default function Projects() {
