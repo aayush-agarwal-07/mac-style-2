@@ -25,7 +25,7 @@ export default function Project() {
   const next = index < projects.length - 1 ? projects[index + 1] : null;
 
   // Dynamic info panel
-  const [activeInfo, setActiveInfo] = useState(null);
+  // const [activeInfo, setActiveInfo] = useState(null);
 
   /* -------------------------
      Reveal intersection observer
@@ -63,15 +63,15 @@ export default function Project() {
   /* -------------------------
      Scroll percent handler coming from ImageAside
      ------------------------- */
-  function handleScrollPercent(percent) {
-    const pts = project?.infoPoints || [];
-    let active = null;
-    for (const p of pts) {
-      if (percent >= p.percent) active = p;
-      else break;
-    }
-    setActiveInfo(active);
-  }
+  // function handleScrollPercent(percent) {
+  //   const pts = project?.infoPoints || [];
+  //   let active = null;
+  //   for (const p of pts) {
+  //     if (percent >= p.percent) active = p;
+  //     else break;
+  //   }
+  //   setActiveInfo(active);
+  // }
 
   /* -------------------------
      Navigation helpers
@@ -123,7 +123,7 @@ export default function Project() {
           alt={`${project.title} visual`}
           label={`${project.title} visuals`}
           stickyRef={stickyRef}
-          onScrollPercent={handleScrollPercent}
+          // onScrollPercent={handleScrollPercent}
         />
 
         {/* RIGHT */}
