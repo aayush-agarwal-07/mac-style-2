@@ -155,7 +155,7 @@ export default function Project() {
           </div>
 
           {/* Dynamic info panel */}
-          <div className="dynamic-info-panel" role="status" aria-live="polite">
+          {/* <div className="dynamic-info-panel" role="status" aria-live="polite">
             {activeInfo ? (
               <>
                 <div className="info-text">{activeInfo.text}</div>
@@ -165,7 +165,7 @@ export default function Project() {
                 Scroll the left image to reveal info
               </div>
             )}
-          </div>
+          </div> */}
         </section>
 
         {/* Next nav (uses functions to avoid ref issues) */}
