@@ -2,7 +2,9 @@ const projects = [
   {
     slug: "arata",
     title: "Arata",
-    hero: "",
+    heroes: [
+      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-final-1.jpg"
+    ],
     sections: [
       {
         id: "intro",
@@ -23,7 +25,9 @@ const projects = [
   {
     slug: "sara",
     title: "Sara",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
+    heroes: [
+      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg"
+    ],
     sections: [
       {
         id: "overview",
@@ -119,7 +123,7 @@ const projects = [
   {
     slug: "campaigns",
     title: "Campaigns",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/serum_and_conditioner.jpg",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/campaign-final-1.jpg",
     sections: [
       {
         id: "overview",
@@ -141,28 +145,7 @@ const projects = [
       { percent: 84, text: "Testing — cross-device and accessibility sweep" },
       { percent: 99, text: "Ship — final build checklist and handoff notes" },
     ],
-  },
-
-  {
-    slug: "bau",
-    title: "BAU",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/serum_and_conditioner.jpg",
-    sections: [
-      {
-        id: "overview",
-        title: "",
-        text: "The Seventh project experimented with dark–light contrast and depth layering using shadows and highlights.",
-      },
-    ],
-    infoPoints: [
-      { percent: 0, text: "Let's get scroll to your left" },
-      { percent: 5, text: "Contrast — baseline dark/light token decisions" },
-      { percent: 29, text: "Elevation — subtle shadow scale and opacity" },
-      { percent: 52, text: "Layering — z-index patterns and clipping" },
-      { percent: 74, text: "Highlights — small specular touches and glows" },
-      { percent: 97, text: "Polish — final color balance and tone mapping" },
-    ],
-  },
+  }
 ];
 
 export default projects;
