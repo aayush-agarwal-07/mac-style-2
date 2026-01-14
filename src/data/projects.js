@@ -2,7 +2,11 @@ const projects = [
   {
     slug: "arata",
     title: "Arata",
+<<<<<<< HEAD
     hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-final-1.jpg",
+=======
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
+>>>>>>> 77a0319462a605eb225e7c7809f4ec8703deeb6d
     sections: [
       {
         id: "intro",
