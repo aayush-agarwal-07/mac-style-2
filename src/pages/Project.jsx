@@ -119,7 +119,7 @@ export default function Project() {
             We pass stickyRef for backwards compatibility and
             onScrollPercent to receive scroll updates. */}
         <ImageAside
-          images={project.heroes || [project.hero]}
+          images={project.heroes}
           alt={`${project.title} visual`}
           label={`${project.title} visuals`}
           stickyRef={stickyRef}
