@@ -112,7 +112,7 @@ const projects = [
       { percent: 35, text: "Typography — expressive headings and rhythm" },
       { percent: 58, text: "Anchors — aligning visuals to narrative beats" },
       { percent: 80, text: "Flow — smoothing transitions between chapters" },
-      { percent: 98, text: "Delivery — export guidelines and QA checks" },
+      { percent: 98, text: "Delivery — export guidelines and QA" },
     ],
   },
 
