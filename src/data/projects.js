@@ -2,7 +2,7 @@ const projects = [
   {
     slug: "arata",
     title: "Arata",
-    hero: "",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-final-1.jpg",
     sections: [
       {
         id: "intro",
@@ -23,10 +23,7 @@ const projects = [
   {
     slug: "sara",
     title: "Sara",
-    heroes: [
-      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
-      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
-    ],
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
     sections: [
       {
         id: "overview",
@@ -122,7 +119,7 @@ const projects = [
   {
     slug: "campaigns",
     title: "Campaigns",
-    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/serum_and_conditioner.jpg",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/campaign-final-1.jpg",
     sections: [
       {
         id: "overview",
