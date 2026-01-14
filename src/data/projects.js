@@ -2,9 +2,8 @@ const projects = [
   {
     slug: "arata",
     title: "Arata",
-    heroes: [
-      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-final-1.jpg"
-    ],
+    heroes:
+      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/arata-final-1.jpg",
     sections: [
       {
         id: "intro",
@@ -25,9 +24,8 @@ const projects = [
   {
     slug: "sara",
     title: "Sara",
-    heroes: [
-      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg"
-    ],
+    heroes:
+      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
     sections: [
       {
         id: "overview",
@@ -145,7 +143,7 @@ const projects = [
       { percent: 84, text: "Testing — cross-device and accessibility sweep" },
       { percent: 99, text: "Ship — final build checklist and handoff notes" },
     ],
-  }
+  },
 ];
 
 export default projects;
