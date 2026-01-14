@@ -2,7 +2,7 @@ const projects = [
   {
     slug: "arata",
     title: "Arata",
-    hero: "",
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
     sections: [
       {
         id: "intro",
@@ -23,10 +23,7 @@ const projects = [
   {
     slug: "sara",
     title: "Sara",
-    heroes: [
-      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
-      "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
-    ],
+    hero: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/sara-wholesome-food.jpg",
     sections: [
       {
         id: "overview",
