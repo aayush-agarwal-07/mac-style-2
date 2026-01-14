@@ -6,7 +6,7 @@
   max-width: 100%;
   margin: 2vw auto 0;
   padding: 0 18px;
-  align-items: center;
+  align-items: unset;
 }
 button:focus {
   outline: none !important;
@@ -167,7 +167,7 @@ button:focus {
 .sticky-frame {
   position: sticky;
   top: 88px; /* account for header height */
-  height: calc(100vh - 110px); /* viewport height minus header/padding */
+  height: calc(88vh - 110px); /* viewport height minus header/padding */
   overflow-y: auto;
   border-radius: 12px;
   background: white;
