@@ -160,11 +160,11 @@ const projects = [
       },
       {
         type: "video",
-        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-4.mp4",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-4-final.mp4",
       },
       {
         type: "video",
-        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-5.mp4",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-5-final.mp4",
       },
       {
         type: "image",
@@ -172,11 +172,11 @@ const projects = [
       },
       {
         type: "video",
-        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-7.mp4",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-7-final.mp4",
       },
       {
         type: "video",
-        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-8.mp4",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-8-final.mp4",
       },
       {
         type: "image",
