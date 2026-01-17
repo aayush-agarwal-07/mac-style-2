@@ -181,6 +181,7 @@ button:focus {
   height: auto; /* keep natural height (likely very tall) */
   display: block;
   border-radius: 8px;
+  margin-bottom: 0.8vw;
 }
 
 /* optional small action area under the frame */
