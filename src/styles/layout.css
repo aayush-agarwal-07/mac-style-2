@@ -515,7 +515,7 @@ button:focus {
   position: relative;
   background: var(--sheet);
   border-radius: 1.6vw;
-  padding: 4vw 12vw 0;
+  padding: 6vw 12vw 0;
   box-shadow: 0 8px 24px var(--card-shadow);
   overflow: hidden;
   min-height: 55vh;
