@@ -169,7 +169,7 @@ button:focus {
   top: 88px; /* account for header height */
   height: calc(88vh - 110px); /* viewport height minus header/padding */
   overflow-y: auto;
-  border-radius: 12px;
+  border-radius: 8px;
   background: white;
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06);
   padding: 12px;
