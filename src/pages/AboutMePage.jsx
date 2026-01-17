@@ -60,7 +60,7 @@ export default function AboutMePage() {
               alt="Bann Studio"
             />
           </a>
-          <a href="https://drive.google.com/file/d/1K6weZQE5Z6metrIMhP-7Kg1m8x1wEPrR/view">
+          <a href="https://drive.google.com/file/d/1Wnu6JPP375E54BCR_w9DHwEY2SiUrdaU/view">
             <img
               src="https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/resume.svg"
               alt="Arata"
