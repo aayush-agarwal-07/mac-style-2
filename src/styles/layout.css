@@ -961,7 +961,7 @@ button:focus {
   .about-brands {
     gap: 8vw;
     width: 100vw;
-    margin: 3vw 0 2vw;
+    margin: 1.5vw 0 2vw;
     overflow-y: auto;
   }
 
