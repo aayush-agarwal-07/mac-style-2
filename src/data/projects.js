@@ -103,7 +103,7 @@ const projects = [
       {
         id: "goal",
         title: "",
-        text: "The Fifth project introduces storytelling sections that combine visual pacing with expressive typography.",
+        text: "As Design Lead, I defined the visual strategy for Arata’s hair serum and conditioner range, starting with detailed mood boards to establish tone, lighting, textures, color language, and hair representation. I translated this direction into a strong master creative system that guided the product shoot, model styling, prop selection, and composition. The master visual ensured consistency across all touchpoints, enabling scalable adaptations for social, performance creatives, and brand communication while reinforcing a premium, sensorial, and result-driven brand narrative.",
       },
     ],
     infoPoints: [
@@ -124,7 +124,7 @@ const projects = [
       {
         id: "overview",
         title: "",
-        text: "The Eighth project combined all previous concepts — typography, grid behavior, motion, and visual pacing — into one blended layout.",
+        text: "A series of campaign designs built from the ground up, driven by strong concepts and holistic thinking. From initial insight to final visuals, each campaign tells a unified story with purpose, consistency, and creative clarity.",
       },
     ],
     infoPoints: [
