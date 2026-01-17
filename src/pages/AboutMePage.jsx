@@ -46,6 +46,10 @@ export default function AboutMePage() {
               <h4>Branding</h4>
               <p>Building flexible brand systems that stay consistent while evolving with growth.</p>
             </article>
+            <article className="skill-card">
+              <h4>Packaging</h4>
+              <p>Creating scalable packaging systems that balance impact, clarity, and consistency across formats.</p>
+            </article>
           </div>
           <BrandsMarquee />
         </div>

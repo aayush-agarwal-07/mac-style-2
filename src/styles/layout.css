@@ -578,8 +578,8 @@ button:focus {
 /* skills grid */
 .about-skills {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  justify-items: center;
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: flex-start;
   gap: 1.8vw;
   margin-top: 2vw;
 }
@@ -960,7 +960,7 @@ button:focus {
   .about-brands {
     gap: 8vw;
     width: 100vw;
-    margin: 8vw 0 2vw;
+    margin: 3vw 0 2vw;
     overflow-y: auto;
   }
 

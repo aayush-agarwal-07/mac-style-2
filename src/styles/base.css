@@ -107,7 +107,7 @@ body::-webkit-scrollbar {
   font-weight: 500;
   color: #2d2d2d;
   margin-bottom: 0;
-  margin-top: 3vw;
+  margin-top: 6vw;
 }
 .folder-grid {
   display: grid;
@@ -265,6 +265,9 @@ body::-webkit-scrollbar {
   .project-card {
     width: 47%;
   }
+  .home .page-title {
+    margin-top: 3vw;
+  }
 }
 @media (max-width: 600px) {
   .project-card {
@@ -275,6 +278,13 @@ body::-webkit-scrollbar {
   }
   .hero {
     height: 220px;
+  }
+  .home .page-title {
+    text-align: center;
+    font-weight: 500;
+    color: #2d2d2d;
+    margin-bottom: 0;
+    margin-top: 3vw;
   }
 }
 
@@ -517,7 +527,6 @@ body::-webkit-scrollbar {
 video.left-long-image {
   background: #000;
 }
-
 
 /* slider group (compact) */
 .zoom-slider {
