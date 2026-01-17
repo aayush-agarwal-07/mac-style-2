@@ -7,7 +7,7 @@ const projects = [
       {
         id: "intro",
         title: "",
-        text: "The First project explores the fundamentals of layout, color flow, and balance. It focuses on establishing a clean design direction.",
+        text: "Arata’s rebranding redefines how the brand speaks—simpler, warmer, and more intuitive. The new system focuses on clear, emotionally resonant naming that’s easy to say, easy to remember, and built to scale across categories. By moving away from overly clinical, complex, or trend-led language, Arata creates a cohesive, gender-neutral portfolio that feels confident yet approachable—designed to connect seamlessly with modern Indian consumers while staying future-ready.",
       },
     ],
     infoPoints: [
@@ -55,7 +55,7 @@ const projects = [
       {
         id: "overview",
         title: "",
-        text: "The Third project shifts focus to subtle motion and micro-interactions. The intention was to breathe life into otherwise static layouts.",
+        text: "A bold brand identity and visual system created for Dash Dog, designed to capture energy, movement, and adventure in the pet accessories category. The project focused on building a distinctive, high contrast design language that reflects an active lifestyle while remaining functional and informative. Through expressive illustration, dynamic color gradients, and modular layouts, the system clearly communicates product benefits, safety features, and use cases across harnesses, leashes, and accessories. The result is a cohesive, scalable brand experience that balances playfulness with performance, positioning Dash Dog as a confident, outdoor first brand for modern dog parents.",
       },
     ],
     infoPoints: [
@@ -79,7 +79,7 @@ const projects = [
       {
         id: "overview",
         title: "",
-        text: "The Fourth project explores modular card systems designed to operate across grid layouts and variable content densities.",
+        text: "A series of high-resolution AI visuals created to explore scalable content production for beauty and lifestyle brands. This project leveraged a multi-channel AI workflow using Pinterest for visual direction and mood mapping, ChatGPT for prompt engineering and creative logic, and Google Studio for refinement and consistency. The focus was on achieving photorealistic textures, accurate product representation, and emotionally resonant lifestyle moments, while maintaining brand coherence across models, lighting, and surfaces. The outcome demonstrates how AI can be used not as a shortcut, but as a strategic design tool to rapidly generate premium, production ready visual assets.",
       },
     ],
     infoPoints: [
@@ -148,22 +148,89 @@ const projects = [
     hero: [
       {
         type: "image",
-        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/1st-slide.jpg",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/slide-1-final.jpg",
       },
       {
         type: "video",
-        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/mobile-without-cta.mp4",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-2.mp4",
       },
       {
         type: "image",
-        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/slide_3.jpg",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/slide-3.jpg",
+      },
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-4.mp4",
+      },
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-5.mp4",
+      },
+      {
+        type: "image",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/slide-6.jpg",
+      },
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-7.mp4",
+      },
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-8.mp4",
+      },
+      {
+        type: "image",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/slide-9.jpg",
+      },
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/video-10.mp4",
       },
     ],
     sections: [
       {
         id: "overview",
         title: "",
-        text: "The Eighth project combined all previous concepts — typography, grid behavior, motion, and visual pacing — into one blended layout.",
+        text: "Led day-to-day BAU design operations across digital platforms, delivering high-impact website banners, campaign creatives, motion graphics, and performance ads. Owned the end-to-end creative process from concept to execution, ensuring brand consistency and performance alignment. Showcased detailed process videos in the folio to highlight ideation, iterations, and problem-solving approach, while mentoring junior designers and maintaining fast turnaround timelines.",
+      },
+    ],
+    infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
+      {
+        percent: 7,
+        text: "Synthesis — combining prior patterns into a single system",
+      },
+      { percent: 38, text: "Harmony — balancing type, motion, and imagery" },
+      {
+        percent: 61,
+        text: "Optimization — minimizing layout shifts and repaints",
+      },
+      { percent: 84, text: "Testing — cross-device and accessibility sweep" },
+      { percent: 99, text: "Ship — final build checklist and handoff notes" },
+    ],
+  },
+  {
+    slug: "kurkure",
+    title: "Kurkure",
+    hero: [
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/kurkure-1.mp4",
+      },
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/kurkure-2.mp4",
+      },
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/kurkure-3.mp4",
+      },
+    ],
+    sections: [
+      {
+        id: "overview",
+        title: "",
+        text: "An end-to-end motion graphics campaign for Kurkure’s Diwali festival, built around the idea of transforming khayal into chatpata hai. The concept was translated into a festive visual language using bold motion, rhythmic pacing, and Diwali-inspired elements to enhance brand recall and connect with Indian audiences in a celebratory context.",
       },
     ],
     infoPoints: [

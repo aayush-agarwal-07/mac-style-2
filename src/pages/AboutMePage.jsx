@@ -22,21 +22,7 @@ export default function AboutMePage() {
               <h1 className="about-name">Kunal Rastogi</h1>
 
               <p className="about-desc">
-                Highly skilled Senior Visual Designer and Design Lead with 6+
-                years of experience building scalable, high-impact brand systems
-                across the D2C ecosystem. I specialise in translating brand
-                strategy into compelling visual narratives across campaigns,
-                websites, marketplaces, and product launches. With a strong
-                foundation in art direction, digital design, and performance-led
-                creatives, I’ve led cross-functional collaborations with growth,
-                product, and marketing teams to deliver cohesive brand
-                experiences at scale. My work spans web design, campaigns,
-                motion graphics, packaging, and marketplace ecosystems, with a
-                sharp focus on both aesthetics and business outcomes. Known for
-                mentoring designers, elevating team output, and setting strong
-                visual direction, I am now focused on growing into a Design
-                Manager role where I can drive creative vision, systems, and
-                people development to build enduring brands.
+                Senior Visual Designer and Design Lead with 6+ years of experience building scalable brand systems across the D2C ecosystem. I specialise in translating brand strategy into clear, effective visual design across campaigns, websites, marketplaces, and product launches, working closely with product, growth, and marketing teams. My work spans web design, campaigns, motion, packaging, and marketplace content, with a strong focus on balancing aesthetics and business impact. I also bring experience in mentoring designers and setting visual direction, and I’m focused on growing into a Design Manager role to lead creative systems, teams, and long-term brand vision.
               </p>
             </div>
           </div>

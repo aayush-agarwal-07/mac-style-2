@@ -381,6 +381,7 @@ body::-webkit-scrollbar {
 }
 
 .maximize-parent {
+  display: none;
   width: 100%;
   background: #fff;
   height: 2vw;

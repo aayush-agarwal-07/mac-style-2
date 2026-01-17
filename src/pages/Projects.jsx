@@ -12,6 +12,7 @@ const CATS = [
   "Campaigns",
   "SuperRange",
   "BAU",
+  "Kurkure",
 ];
 
 export default function Projects() {
