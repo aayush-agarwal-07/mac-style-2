@@ -515,7 +515,7 @@ button:focus {
   position: relative;
   background: var(--sheet);
   border-radius: 1.6vw;
-  padding: 8vw 12vw 0;
+  padding: 4vw 12vw 0;
   box-shadow: 0 8px 24px var(--card-shadow);
   overflow: hidden;
   min-height: 55vh;
@@ -545,7 +545,7 @@ button:focus {
 }
 .about-avatar {
   width: 11vw;
-  height: 16vw;
+  height: 14vw;
   border-radius: 1vw;
   object-fit: cover;
   display: block;
@@ -580,7 +580,7 @@ button:focus {
 .about-skills {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  justify-items: flex-start;
+  justify-items: center;
   gap: 1.8vw;
   margin-top: 2vw;
 }
@@ -595,8 +595,8 @@ button:focus {
   background: url(https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/about_me_page_folder_icon.svg) !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
-  width: 14vw !important;
-  height: 14vw !important;
+  width: 13vw !important;
+  height: 12vw !important;
   border-radius: 1.1vw;
   padding: 0.5vw 1vw;
 }
