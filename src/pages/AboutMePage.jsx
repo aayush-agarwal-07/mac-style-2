@@ -22,7 +22,7 @@ export default function AboutMePage() {
               <h1 className="about-name">Kunal Rastogi</h1>
 
               <p className="about-desc">
-                Senior Visual Designer and Design Lead with 6+ years of experience building scalable brand systems across the D2C ecosystem. I specialise in translating brand strategy into clear, effective visual design across campaigns, websites, marketplaces, and product launches, working closely with product, growth, and marketing teams. My work spans web design, campaigns, motion, packaging, and marketplace content, with a strong focus on balancing aesthetics and business impact. I also bring experience in mentoring designers and setting visual direction, and I’m focused on growing into a Design Manager role to lead creative systems, teams, and long-term brand vision.
+                Design Lead with 6+ years of experience building scalable brand systems across the D2C ecosystem. I specialise in translating brand strategy into clear, effective visual design across campaigns, websites, marketplaces, and product launches, working closely with product, growth, and marketing teams. My work spans web design, campaigns, motion, packaging, and marketplace content, with a strong focus on balancing aesthetics and business impact. I also bring experience in mentoring designers and setting visual direction, and I’m focused on growing into a Design Manager role to lead creative systems, teams, and long-term brand vision.
               </p>
             </div>
           </div>
