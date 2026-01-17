@@ -513,6 +513,11 @@ body::-webkit-scrollbar {
   cursor: pointer;
 }
 
+video.left-long-image {
+  background: #000;
+}
+
+
 /* slider group (compact) */
 .zoom-slider {
   display: flex;

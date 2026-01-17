@@ -142,6 +142,45 @@ const projects = [
       { percent: 99, text: "Ship — final build checklist and handoff notes" },
     ],
   },
+  {
+    slug: "bau",
+    title: "BAU",
+    hero: [
+      {
+        type: "image",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/1st-slide.jpg",
+      },
+      {
+        type: "video",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/mobile-without-cta.mp4",
+      },
+      {
+        type: "image",
+        src: "https://cdn.jsdelivr.net/gh/aayush-agarwal-07/assets@main/slide_3.jpg",
+      },
+    ],
+    sections: [
+      {
+        id: "overview",
+        title: "",
+        text: "The Eighth project combined all previous concepts — typography, grid behavior, motion, and visual pacing — into one blended layout.",
+      },
+    ],
+    infoPoints: [
+      { percent: 0, text: "Let's get scroll to your left" },
+      {
+        percent: 7,
+        text: "Synthesis — combining prior patterns into a single system",
+      },
+      { percent: 38, text: "Harmony — balancing type, motion, and imagery" },
+      {
+        percent: 61,
+        text: "Optimization — minimizing layout shifts and repaints",
+      },
+      { percent: 84, text: "Testing — cross-device and accessibility sweep" },
+      { percent: 99, text: "Ship — final build checklist and handoff notes" },
+    ],
+  },
 ];
 
 export default projects;

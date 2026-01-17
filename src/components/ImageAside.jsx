@@ -20,6 +20,8 @@ export default function ImageAside({
   const MIN_SCALE = 0.1; // 10%
   const MAX_SCALE = 30; // 3000%
 
+  const mediaItems = Array.isArray(src) ? src : [{ type: "image", src }];
+
   const [open, setOpen] = useState(false);
   const [scale, setScale] = useState(INITIAL_SCALE);
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
@@ -28,7 +30,7 @@ export default function ImageAside({
   const startPan = useRef(null);
   const viewerRef = useRef(null);
   const ivImageRef = useRef(null);
-  const previewRef = useRef(null);
+  // const previewRef = useRef(null);
   const stickyFrameRef = useRef(null);
 
   const pointers = useRef(new Map());
@@ -559,17 +561,30 @@ export default function ImageAside({
           role="region"
           aria-label="image preview frame"
         >
-          <img
-            ref={previewRef}
-            alt={alt}
-            className="left-long-image interactive-image"
-            src={src}
-            onDragStart={preventDrag}
-            onPointerDown={onPreviewPointerDown}
-            onPointerMove={onPreviewPointerMove}
-            onPointerUp={onPreviewPointerUp}
-            onPointerCancel={onPreviewPointerUp}
-          />
+          {mediaItems.map((item, i) =>
+            item.type === "video" ? (
+              <video
+                key={i}
+                className="left-long-image"
+                src={item.src}
+                controls
+                playsInline
+                muted
+              />
+            ) : (
+              <img
+                key={i}
+                alt={`${alt} ${i + 1}`}
+                className="left-long-image interactive-image"
+                src={item.src}
+                onDragStart={preventDrag}
+                onPointerDown={onPreviewPointerDown}
+                onPointerMove={onPreviewPointerMove}
+                onPointerUp={onPreviewPointerUp}
+                onPointerCancel={onPreviewPointerUp}
+              />
+            )
+          )}
         </div>
       </aside>
 
