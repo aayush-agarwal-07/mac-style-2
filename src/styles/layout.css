@@ -906,7 +906,7 @@ button:focus {
   }
 
   .about-skills {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(5, 1fr) !important;
     width: fit-content !important;
     width: 100vw !important;
     overflow-x: auto !important;
