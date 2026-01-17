@@ -573,6 +573,7 @@ button:focus {
   line-height: 1.7;
   font-size: 0.95vw;
   margin: 0;
+  text-align: justify;
 }
 
 /* skills grid */
